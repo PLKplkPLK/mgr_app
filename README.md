@@ -3,10 +3,10 @@ An app to classify users' phototrap images.
 
 
 #### Technicalities
-Django:
-django-admin startproject [name] [directory]
-python manage.py [command]
-commands: runserver, startapp [name], 
+Django:\
+django-admin startproject [name] [directory]\
+python manage.py [command]\
+commands: runserver, startapp [app], (makemigrations [app], check, migrate)
 
-DB:
+DB:\
 Postgresql and azure blob?

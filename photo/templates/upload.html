@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodaj zdjęcie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            background-color: #f4f4f4;
+        }
+        .upload-container {
+            max-width: 500px;
+            margin: auto;
+            padding: 2em;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .upload-container h2 {
+            margin-bottom: 1em;
+        }
+        input[type="file"] {
+            display: block;
+            margin-bottom: 1em;
+        }
+        button {
+            padding: 0.5em 1.2em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .result-image {
+            margin-top: 1em;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h2>Wyślij zdjęcie do rozpoznania</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Wyślij</button>
+        </form>
+    </div>
+</body>
+</html>
