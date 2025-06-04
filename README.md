@@ -6,7 +6,7 @@ An app to classify users' phototrap images.
 Django:\
 django-admin startproject [name] [directory]\
 python manage.py [command]\
-commands: runserver, startapp [app], (makemigrations [app], check, migrate)
+commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 DB:\
 Postgresql and azure blob?
