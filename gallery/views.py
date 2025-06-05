@@ -9,6 +9,7 @@ def browse(request):
 
     context = {"img1_url": "www.images.com/image1.jpg"}
     return render(request, "browse.html", context)
+
 from django.urls import reverse
 def browse_my(request):
     """

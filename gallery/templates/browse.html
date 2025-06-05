@@ -4,33 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Przeglądaj zdjęcia</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2em;
-            background-color: #f4f4f4;
-        }
-        .browse-container {
-            max-width: 500px;
-            margin: auto;
-            padding: 2em;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .browse-container h2 {
-            margin-bottom: 1em;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'gallery/style.css' %}">
 </head>
 <body>
     <div class="browse-container">
         <h2>Zdjęcia zwierzątek</h2>
         <div>
-            <img src="https://media.wired.com/photos/593261cab8eb31692072f129/3:2/w_2560%2Cc_limit/85120553.jpg">
+            <img src="https://detroitzooblog.org/wp-content/uploads/2019/04/24651629670_e72fb9d6ab_k.jpg">
             <img src="https://www.worldanimalprotection.org/cdn-cgi/image/width=1920,format=auto/globalassets/images/elephants/1033551-elephant.jpg">
         </div>
-        <a href="{% url 'gallery:' %}"></a>
     </div>
 </body>
 </html>
