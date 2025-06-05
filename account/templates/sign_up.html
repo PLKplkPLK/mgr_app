@@ -1,0 +1,23 @@
+{% load static %}
+<header>
+    <link rel="stylesheet" href="{% static 'account/style.css' %}">
+</header>
+
+<body>
+<div class="signup-container">
+    <h2>Stwórz konto</h2>
+
+    <form action="{% url 'account:create' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label>Nazwa użytkownika:</label>
+        <input name="username" type="text" />
+        <label>Email:</label>
+        <input name="email" type="email" />
+        <label>Hasło:</label>
+        <input name="password" type="password" />
+        <button type="submit">Stwórz</button>
+    </form>
+
+</div>
+</body>

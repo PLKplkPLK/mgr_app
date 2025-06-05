@@ -3,7 +3,7 @@ body {
     margin: 2em;
     background-color: #f4f4f4;
 }
-.upload-container {
+.signup-container {
     max-width: 500px;
     margin: auto;
     padding: 2em;
@@ -11,12 +11,12 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
-.upload-container h2 {
+.signup-container h2 {
     margin-bottom: 1em;
 }
-input[type="file"] {
+form input {
     display: block;
-    margin-bottom: 1em;
+    margin: 10px;
 }
 button {
     padding: 0.5em 1.2em;
@@ -25,14 +25,6 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
-.result-image {
-    margin-top: 1em;
-    max-width: 100%;
-}
-img {
-    width: 100%;
-    margin-top: 20px;
 }
 .buttons-container {
     max-width: 500px;

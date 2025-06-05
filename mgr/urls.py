@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from photo.views import upload
+
 urlpatterns = [
     # it could be (route, view), but it's better
     # to have separate urls for that
@@ -24,4 +26,5 @@ urlpatterns = [
     path('account/', include("account.urls")),
     path('gallery/', include("gallery.urls")),
     path('admin/', admin.site.urls),
+    path('', upload)
 ]

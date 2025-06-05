@@ -1,3 +1,58 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+def signup_page(request):
+    """
+    Render a site to create user
+    """
+    if request.user.is_authenticated:
+        return redirect('settings')
+    else:
+        return render(request, 'sign_up.html')
+
+def create(request):
+    """
+    Create a user
+    """
+    user = User.objects.create_user(
+        request.POST['username'], request.POST['email'], request.POST['password']
+        )
+    
+    return redirect('/photo')
+
+def login_page(request):
+    """
+    Render a login page
+    """
+    return render(request, 'login.html')
+
+def signin(request):
+    """
+    Authenticate user
+    """
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = authenticate(request, username=username, password=password)
+
+    if user is not None:
+        login(request, user)
+        return redirect('/photo')
+    else:
+        # to be changed
+        return redirect('account:login_page')
+
+def settings(request):
+    """
+    Render a settings page
+    """
+    return render(request, 'settings.html')
+
+#@login_required
+def signout(request):
+    """
+    Logout user
+    """
+    logout(request)
+    return redirect('account:login_page')

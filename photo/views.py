@@ -6,7 +6,7 @@ def upload(request):
     """
     return render(request, "upload.html")
 
-def classify(request):
+def classify_image(request):
     """
     Site user's redirected to after uploading a photo.
     The view redirects user classifies an image and shows the results

@@ -1,0 +1,21 @@
+{% load static %}
+<header>
+    <link rel="stylesheet" href="{% static 'account/style.css' %}">
+</header>
+
+<body>
+<div class="signup-container">
+    <h2>Zaloguj się</h2>
+
+    <form action="{% url 'account:signin' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label>Nazwa użytkownika:</label>
+        <input name="username" type="text" />
+        <label>Hasło:</label>
+        <input name="password" type="password" />
+        <button type="submit">Zaloguj</button>
+    </form>
+
+</div>
+</body>

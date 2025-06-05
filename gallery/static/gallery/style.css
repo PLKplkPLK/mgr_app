@@ -17,3 +17,17 @@ body {
 img {
     width:100%;
 }
+.buttons-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+}
+.button {
+    padding: 10px;
+    font-size: larger;
+    border: saddlebrown 1px solid;
+    text-decoration: none;
+    color: black;
+}

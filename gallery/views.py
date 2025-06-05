@@ -7,6 +7,7 @@ def browse(request):
     View for browsing all images of other users
     """
 
+    # dodać wszędzie sprawdzenie, czy zalogowany
     context = {"img1_url": "www.images.com/image1.jpg"}
     return render(request, "browse.html", context)
 
