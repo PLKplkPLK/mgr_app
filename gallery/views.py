@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render#, redirect
+from django.contrib.auth.decorators import login_required
 
 app_name = 'gallery'
 
@@ -6,12 +7,10 @@ def browse(request):
     """
     View for browsing all images of other users
     """
-
-    # dodać wszędzie sprawdzenie, czy zalogowany
     context = {"img1_url": "www.images.com/image1.jpg"}
     return render(request, "browse.html", context)
 
-from django.urls import reverse
+@login_required
 def browse_my(request):
     """
     View for browsing photos of the user

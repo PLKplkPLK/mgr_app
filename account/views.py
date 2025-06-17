@@ -8,7 +8,7 @@ def signup_page(request):
     Render a site to create user
     """
     if request.user.is_authenticated:
-        return redirect('settings')
+        return redirect('/photo')
     else:
         return render(request, 'sign_up.html')
 
@@ -18,7 +18,7 @@ def create(request):
     """
     user = User.objects.create_user(
         request.POST['username'], request.POST['email'], request.POST['password']
-        )
+    )
     
     return redirect('/photo')
 
@@ -26,6 +26,9 @@ def login_page(request):
     """
     Render a login page
     """
+    if request.user.is_authenticated:
+        return redirect('/photo')
+    
     return render(request, 'login.html')
 
 def signin(request):
@@ -43,13 +46,14 @@ def signin(request):
         # to be changed
         return redirect('account:login_page')
 
+@login_required
 def settings(request):
     """
     Render a settings page
     """
     return render(request, 'settings.html')
 
-#@login_required
+@login_required
 def signout(request):
     """
     Logout user
