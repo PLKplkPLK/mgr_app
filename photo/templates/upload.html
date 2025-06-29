@@ -19,11 +19,13 @@
         <form action="{% url 'photo:classify_image' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <input id="fileupload" name="myfile" type="file" />
-            <button type="submit">Wyślij</button>
+            <input id="image_file" name="image_file" type="file" />
+            <input id="is_private" name="is_private" type="checkbox" />
+            <label for="is_private">Czy zdjęcie ma być prywatne?</label></br>
+            <button id="submit_button" type="submit">Wyślij</button>
         </form>
         
-        <img src="{% static 'photo/images/upload_image.webp' %}">
+        <!--<img src="">-->
     </div>
 </body>
 </html>

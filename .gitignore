@@ -1,1 +1,9 @@
 .venv
+account/__pycache__
+gallery/__pycache__
+mgr/__pycache__
+photo/__pycache__
+account/migrations/__pycache__
+gallery/migrations/__pycache__
+mgr/migrations/__pycache__
+photo/migrations/__pycache__

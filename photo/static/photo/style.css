@@ -26,6 +26,9 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
+#submit_button {
+    margin-top: 20px;
+}
 .result-image {
     margin-top: 1em;
     max-width: 100%;
