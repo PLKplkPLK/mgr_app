@@ -29,7 +29,7 @@ def upload(request):
             data = {
                 "instances": [
                     {
-                        "filepath": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxSyhtXpCD4XuWXtf7BbfC-bYMbNlKLWJjWAPmEjOGaWbkUD61Q6dvnBbhkwH57Pidg5vaOGVgFF2pIfNiIuZorg",
+                        "filepath": "http://127.0.0.1:8000" + image_object.image.url,
                         "country": "POL"
                     }
                 ]
