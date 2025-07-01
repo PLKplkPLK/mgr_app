@@ -18,7 +18,10 @@ class Photo(models.Model):
         null=True
     )
     image = models.ImageField(upload_to = upload_to_uuid, null=True)
-    prediction = models.TextField(null=True)
+    prediction_1 = models.TextField(null=True)
+    prediction_1_probability = models.FloatField(null=True)
+    prediction_2 = models.TextField(null=True)
+    prediction_2_probability = models.FloatField(null=True)
     prediction_pl = models.TextField(null=True)
 
     def __str__(self):

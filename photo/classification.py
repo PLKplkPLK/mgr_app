@@ -7,6 +7,17 @@ import multiprocessing as mp
 from speciesnet import SpeciesNet, DEFAULT_MODEL
 from speciesnet.utils import prepare_instances_dict, load_partial_predictions
 
+
+
+            # classify image
+            run_speciesnet_model(
+                filepath=image_object.image.path,
+                country="POL",
+                predictions_json="predictions/" + str(image_object.uuid) + ".json"
+            )
+
+
+
 def run_speciesnet_model(
     filepath: str,
     country: str,

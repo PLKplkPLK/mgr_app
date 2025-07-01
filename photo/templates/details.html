@@ -22,10 +22,10 @@
         <p>Zdjęcie jest publiczne</p>
         {% endif %}
 
-        {% if predictions %}
-        <p>Wykryto na zdjęciu strusia</p>
+        {% if prediction_1 %}
+        <p>Wykryto na zdjęciu: {{ prediction_1 }}</p>
         {% else %}
-        <p>Klasyfikacja zwierzęcia jeszcze się nie zakończyła</p>
+        <p>Klasyfikacja zwierzęcia jeszcze się nie zakończyła, lub wystąpił błąd.</p>
         {% endif %}
     </div>
 </body>

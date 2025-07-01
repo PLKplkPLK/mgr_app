@@ -22,14 +22,6 @@ def upload(request):
                 image = form.cleaned_data['image_file'],
                 owner_id = request.user
             )
-            """
-            # classify image
-            run_speciesnet_model(
-                filepath=image_object.image.path,
-                country="POL",
-                predictions_json="predictions/" + str(image_object.uuid) + ".json"
-            )
-            """
 
             # The classification is done on a separate server via API
             print(image_object.image.url)
@@ -42,10 +34,14 @@ def upload(request):
                     }
                 ]
             }
-            response = requests.post(url, json=data)
-            print(response.json())
+            response = requests.post(url, json=data).json()
+            response = response['predictions'][0]
 
-            #image_object.prediction = ...
+            image_object.prediction_1  = response['classifications']['classes'][0]
+            image_object.prediction_2  = response['classifications']['classes'][1]
+            image_object.prediction_pl = response['prediction']
+            image_object.prediction_1_probability = response['classifications']['scores'][0]
+            image_object.prediction_2_probability = response['classifications']['scores'][1]
             image_object.save()
 
             return redirect(image_object)
@@ -56,4 +52,21 @@ def upload(request):
 @login_required
 def photo_detail(request, uuid):
     photo = get_object_or_404(Photo, uuid=uuid)
+
+    if photo.prediction_1:
+        prediction_1 = photo.prediction_1.split(';')[-1]
+        prediction_2 = photo.prediction_2.split(';')[-1]
+        prediction_pl = photo.prediction_pl.split(';')[-1]
+        prediction_1_probability = photo.prediction_1_probability
+        prediction_2_probability = photo.prediction_2_probability
+        return render(request, "details.html", {
+            "photo": photo,
+            "prediction_1": prediction_1,
+            "prediction_2": prediction_2,
+            "prediction_pl": prediction_pl,
+            "prediction_1_probability": prediction_1_probability,
+            "prediction_2_probability": prediction_2_probability
+        })
+
     return render(request, "details.html", {"photo": photo})
+    
