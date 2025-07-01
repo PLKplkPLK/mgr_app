@@ -29,3 +29,9 @@ class Photo(models.Model):
 
     def get_absolute_url(self):
         return reverse("photo:photo_detail", kwargs={"uuid": self.uuid})
+    
+    @property
+    def prediction_1_clean(self):
+        if self.prediction_1:
+            return self.prediction_1.strip().split(";")[-1]
+        return ""

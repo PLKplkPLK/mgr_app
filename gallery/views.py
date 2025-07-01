@@ -23,9 +23,12 @@ def browse_my(request):
     """
     View for browsing photos of the user
     """
-    photos = Photo.objects.filter(owner_id=0) # TODO
+    photos = Photo.objects.filter(owner_id=request.user.id)
+    print(photos)
+    print(request.user.id)
 
     return render(request, "browse.html", {
         "redirection_url": reverse("gallery:browse"),
-        "redirection_text": "Zdjęcia innych"
+        "redirection_text": "Zdjęcia innych",
+        "photos": photos
     })

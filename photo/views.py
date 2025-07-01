@@ -24,25 +24,29 @@ def upload(request):
             )
 
             # The classification is done on a separate server via API
-            print(image_object.image.url)
-            url = "http://localhost:8008/predict"
-            data = {
-                "instances": [
-                    {
-                        "filepath": "http://127.0.0.1:8000" + image_object.image.url,
-                        "country": "POL"
-                    }
-                ]
-            }
-            response = requests.post(url, json=data).json()
-            response = response['predictions'][0]
+            try:
+                url = "http://localhost:8008/predict"
+                data = {
+                    "instances": [
+                        {
+                            "filepath": "http://127.0.0.1:8000" + image_object.image.url,
+                            "country": "POL"
+                        }
+                    ]
+                }
+                response = requests.post(url, json=data).json()
+                response = response['predictions'][0]
 
-            image_object.prediction_1  = response['classifications']['classes'][0]
-            image_object.prediction_2  = response['classifications']['classes'][1]
-            image_object.prediction_pl = response['prediction']
-            image_object.prediction_1_probability = response['classifications']['scores'][0]
-            image_object.prediction_2_probability = response['classifications']['scores'][1]
-            image_object.save()
+                image_object.prediction_1  = response['classifications']['classes'][0]
+                image_object.prediction_2  = response['classifications']['classes'][1]
+                image_object.prediction_pl = response['prediction']
+                image_object.prediction_1_probability = response['classifications']['scores'][0]
+                image_object.prediction_2_probability = response['classifications']['scores'][1]
+                image_object.save()
+            except:
+                # the photo file still stays on disk - TODO
+                image_object.delete()
+                return render(request, "upload.html", {"form": form, "error": "Nie można połączyć się z serwerem"})
 
             return redirect(image_object)
     else:
