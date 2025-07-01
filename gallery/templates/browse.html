@@ -13,10 +13,13 @@
     </div>
 
     <div class="browse-container">
-        <h2>Zdjęcia zwierzątek</h2>
+        <a class="button" href="{{ redirection_url }}">{{ redirection_text }}</a>
         <div>
-            <img src="https://detroitzooblog.org/wp-content/uploads/2019/04/24651629670_e72fb9d6ab_k.jpg">
-            <img src="https://www.worldanimalprotection.org/cdn-cgi/image/width=1920,format=auto/globalassets/images/elephants/1033551-elephant.jpg">
+            {% if photos %}
+                {% for photo in photos %}
+                    
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 </body>

@@ -1,21 +1,31 @@
 from django.shortcuts import render#, redirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+
+from photo.models import Photo
 
 app_name = 'gallery'
 
 def browse(request):
     """
-    View for browsing all images of other users
+    View for browsing images of other users
     """
-    context = {"img1_url": "www.images.com/image1.jpg"}
-    return render(request, "browse.html", context)
+    photos = Photo.objects.filter(is_private=False)
+    
+    return render(request, "browse.html", {
+        "redirection_url": reverse("gallery:browse_my"),
+        "redirection_text": "Moje zdjęcia",
+        "photos": photos
+    })
 
 @login_required
 def browse_my(request):
     """
     View for browsing photos of the user
     """
+    photos = Photo.objects.filter(owner_id=0) # TODO
 
-    context = {"img1_url_mine": "www.images.com/image2.jpg"}
-    # return HttpResponseRedirect(reverse("photo:upload", args=(something,)))
-    return render(request, "browse.html", context)
+    return render(request, "browse.html", {
+        "redirection_url": reverse("gallery:browse"),
+        "redirection_text": "Zdjęcia innych"
+    })
