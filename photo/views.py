@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+import requests
+
 from .models import Photo
 from .forms import SendPhotoForm
-from .classification import run_speciesnet_model
 
 @login_required
 def upload(request):
@@ -21,16 +22,30 @@ def upload(request):
                 image = form.cleaned_data['image_file'],
                 owner_id = request.user
             )
-
+            """
             # classify image
             run_speciesnet_model(
                 filepath=image_object.image.path,
                 country="POL",
                 predictions_json="predictions/" + str(image_object.uuid) + ".json"
             )
+            """
 
-            image_object.prediction = # zrobić jako server???
+            # The classification is done on a separate server via API
+            print(image_object.image.url)
+            url = "http://localhost:8008/predict"
+            data = {
+                "instances": [
+                    {
+                        "filepath": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxSyhtXpCD4XuWXtf7BbfC-bYMbNlKLWJjWAPmEjOGaWbkUD61Q6dvnBbhkwH57Pidg5vaOGVgFF2pIfNiIuZorg",
+                        "country": "POL"
+                    }
+                ]
+            }
+            response = requests.post(url, json=data)
+            print(response.json())
 
+            #image_object.prediction = ...
             image_object.save()
 
             return redirect(image_object)

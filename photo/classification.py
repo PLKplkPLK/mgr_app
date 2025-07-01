@@ -1,3 +1,4 @@
+"""
 from typing import Optional
 import json
 from pathlib import Path
@@ -54,3 +55,4 @@ def run_speciesnet_model(
     )
 
     return predictions_dict
+"""
