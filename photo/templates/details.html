@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twoje zdjęcie</title>
+    <link rel="stylesheet" href="{% static 'photo/style.css' %}">
+</head>
+
+<body>
+    <div class="buttons-container">
+        <a class="button" href="{% url 'gallery:browse' %}">Przejdź do galerii</a>
+        <a class="button" href="{% url 'account:settings' %}">Przejdź do ustawień</a>
+        <a class="button" href="{% url 'photo:upload' %}">Wyślij zdjęcie</a>
+    </div>
+
+    <div class="upload-container">
+        <img src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
+        {% if photo.is_private %}
+        <p>Zdjęcie jest prywatne</p>
+        {% else %}
+        <p>Zdjęcie jest publiczne</p>
+        {% endif %}
+
+        {% if predictions %}
+        <p>Wykryto na zdjęciu strusia</p>
+        {% else %}
+        <p>Klasyfikacja zwierzęcia jeszcze się nie zakończyła</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -18,7 +18,7 @@ input[type="file"] {
     display: block;
     margin-bottom: 1em;
 }
-button {
+input[type="submit"] {
     padding: 0.5em 1.2em;
     background-color: #007bff;
     color: white;
