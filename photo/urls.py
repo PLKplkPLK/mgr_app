@@ -6,5 +6,6 @@ app_name = 'photo'
 
 urlpatterns = [
     path('', views.upload, name='upload'),
-    path('photo/<uuid:uuid>/', views.photo_detail, name="photo_detail")
+    path('<uuid:uuid>/toggle_privacy/', views.toggle_photo_privacy, name='toggle_photo_privacy'),
+    path('<uuid:uuid>/', views.photo_detail, name="photo_detail")
 ]

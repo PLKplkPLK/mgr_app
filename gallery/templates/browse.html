@@ -17,8 +17,10 @@
         <div>
             {% if photos %}
                 {% for photo in photos %}
-                    <h3>{{ photo.prediction_1_clean }}</h3>
-                    <img src={{ photo.image.url }} alt="Zdjęcie zwierzątka">
+                    <a href="{% url 'photo:photo_detail' photo.uuid %}">
+                        <h3>{{ photo.prediction_1_clean }}</h3>
+                        <img src={{ photo.image.url }} alt="Zdjęcie zwierzątka">
+                    </a>
                 {% endfor %}
             {% else %}
                 <p>Brak zdjęć</p>

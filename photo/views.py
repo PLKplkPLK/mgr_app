@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from django.http import HttpResponseBadRequest # TODO usunąć
+from django.http import HttpResponseBadRequest
 
 import requests
 
@@ -20,7 +20,7 @@ def upload(request):
             image_object = Photo.objects.create(
                 is_private = form.cleaned_data['is_private'],
                 image = form.cleaned_data['image_file'],
-                owner_id = request.user
+                owner = request.user
             )
 
             # The classification is done on a separate server via API
@@ -55,6 +55,9 @@ def upload(request):
 
 @login_required
 def photo_detail(request, uuid):
+    """
+    Site to display details of a photo
+    """
     photo = get_object_or_404(Photo, uuid=uuid)
 
     if photo.prediction_1:
@@ -74,3 +77,16 @@ def photo_detail(request, uuid):
 
     return render(request, "details.html", {"photo": photo})
     
+@login_required
+def toggle_photo_privacy(request, uuid):
+    """
+    View to handle privacy change of a photo
+    """
+    photo = get_object_or_404(Photo, uuid=uuid, owner=request.user)
+
+    if request.method == "POST":
+        photo.is_private = not photo.is_private
+        photo.save()
+        return redirect(photo)
+    
+    return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)

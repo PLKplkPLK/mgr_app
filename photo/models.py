@@ -12,7 +12,7 @@ class Photo(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     upload_time = models.DateTimeField(auto_now_add=True, null=True)
     is_private = models.BooleanField(default=True)
-    owner_id = models.ForeignKey(
+    owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         null=True
@@ -23,6 +23,11 @@ class Photo(models.Model):
     prediction_2 = models.TextField(null=True)
     prediction_2_probability = models.FloatField(null=True)
     prediction_pl = models.TextField(null=True)
+    # review_status values:
+    # 0 - not to be reviewed
+    # 1 - to be reviewed
+    # 2 - reviewed
+    review_status = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return 'Photo of id: ' + str(self.id)
