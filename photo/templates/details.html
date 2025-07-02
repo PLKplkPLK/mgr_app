@@ -39,6 +39,8 @@
 
         {% if photo.review_status == 0 %}
             Zdjęcie nie było sprawdzane.
+        {% elif photo.review_status == 1 and photo.is_private %}
+            <p style="color: red">Zdjęcie musi być publiczne, aby mogło być sprawdzone przez innych użytkowników</p>
         {% else %}
             Wyświetl komentarze, gdy == 1 dodaj też opcję dopisywania ich
         {% endif %}
