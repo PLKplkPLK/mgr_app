@@ -90,3 +90,25 @@ def toggle_photo_privacy(request, uuid):
         return redirect(photo)
     
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
+
+@login_required
+def toggle_review(request, uuid):
+    """
+    Function to change review status
+    review_status values:
+     0 - not to be reviewed
+     1 - to be reviewed
+     2 - reviewed
+    """
+    photo = get_object_or_404(Photo, uuid=uuid, owner=request.user)
+
+    if request.method == "POST":
+        if photo.review_status != 1:
+            photo.review_status = 1
+        else:
+            photo.review_status = 2
+
+        photo.save()
+        return redirect(photo)
+    
+    return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)

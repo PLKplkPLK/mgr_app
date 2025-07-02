@@ -36,6 +36,21 @@
         {% else %}
         <p>Klasyfikacja zwierzęcia jeszcze się nie zakończyła, lub wystąpił błąd.</p>
         {% endif %}
+
+        {% if photo.review_status == 0 %}
+            Zdjęcie nie było sprawdzane.
+        {% else %}
+            Wyświetl komentarze, gdy == 1 dodaj też opcję dopisywania ich
+        {% endif %}
+
+        {% if photo.owner == user %}
+        <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
+            {% csrf_token %}
+            <button type="submit">
+                {% if photo.review_status != 1 %}Oznacz zdjęcie do sprawdzenia{% else %}Oznacz zdjęcie jako sprawdzone{% endif %}
+            </button>
+        </form>
+        {% endif %}
     </div>
 </body>
 </html>

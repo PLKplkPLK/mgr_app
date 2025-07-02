@@ -12,7 +12,6 @@ DB:\
 Postgresql and azure blob?
 
 #### TODO
-- ustawianie to be reviewed
 - galeria: przeglądanie to be reviewed
 - dodawanie reviews
 - frontend
