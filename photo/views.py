@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+from django.http import HttpResponseBadRequest # TODO usunąć
+
 import requests
 
 from .models import Photo
@@ -11,8 +13,6 @@ def upload(request):
     """
     A site to upload and classify a photo
     """
-    MAX_FILE_SIZE = 1e7 # 10 MB
-
     if request.method == "POST":
         form = SendPhotoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -43,7 +43,7 @@ def upload(request):
                 image_object.prediction_1_probability = response['classifications']['scores'][0]
                 image_object.prediction_2_probability = response['classifications']['scores'][1]
                 image_object.save()
-            except:
+            except Exception as e:
                 # the photo file still stays on disk - TODO
                 image_object.delete()
                 return render(request, "upload.html", {"form": form, "error": "Nie można połączyć się z serwerem"})

@@ -10,7 +10,7 @@ def browse(request):
     """
     View for browsing images of other users
     """
-    photos = Photo.objects.filter(is_private=False)
+    photos = Photo.objects.filter(is_private=False)[:10]
     
     return render(request, "browse.html", {
         "redirection_url": reverse("gallery:browse_my"),
