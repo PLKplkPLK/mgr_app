@@ -24,13 +24,23 @@
 
         <h3>{{error}}</h3>
 
-        <form action="{% url 'photo:upload' %}" method="POST" enctype="multipart/form-data">
+        <form id="uploadPhotoForm" action="{% url 'photo:upload' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form }}
             <input id="submit_button" type="submit" value="Wyślij"/>
         </form>
         
-        <!--<img src="">-->
+        <div id="loading">
+            <div class="spinner"></div>
+            <p style="text-aling:center">Próbuję rozpoznać zwierzaka</p>
+        </div>
     </div>
 </body>
+
+<script>
+document.getElementById('uploadPhotoForm').addEventListener('submit', function () {
+    document.getElementById('uploadPhotoForm').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+})
+</script>
 </html>

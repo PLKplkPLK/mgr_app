@@ -12,5 +12,4 @@ DB:\
 Postgresql and azure blob?
 
 #### TODO
-- loading js
 - frontend
