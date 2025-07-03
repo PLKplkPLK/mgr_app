@@ -24,3 +24,6 @@ class SendPhotoForm(forms.Form):
             image.seek(0)
 
         return image
+
+class PostReviewForm(forms.Form):
+    review = forms.CharField(widget=forms.Textarea, label="Właściciel zdjęcia chce twojej pomocy w weryfikacji zwierzęcia:")

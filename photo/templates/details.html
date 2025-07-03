@@ -16,6 +16,7 @@
 
     <div class="upload-container">
         <img src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
+        <p>Data dodania: {{photo.upload_time}}</p>
         {% if photo.is_private %}
         <p>Zdjęcie jest prywatne</p>
         {% else %}
@@ -42,7 +43,27 @@
         {% elif photo.review_status == 1 and photo.is_private %}
             <p style="color: red">Zdjęcie musi być publiczne, aby mogło być sprawdzone przez innych użytkowników</p>
         {% else %}
-            Wyświetl komentarze, gdy == 1 dodaj też opcję dopisywania ich
+            <form method="post" action="{% url 'photo:post_review' photo.uuid %}">
+                {% csrf_token %}
+                {{ post_review_form }}
+                <button type="submit">Dodaj</button>
+            </form>
+        {% endif %}
+
+        {% if reviews %}
+            {% for review in reviews %}
+                <div class='review'>
+                    <div class='review_upper'>
+                        {{ review.owner.username }}, {{ review.upload_time }}
+                        {{ review.score }}
+                    </div>
+                    <div class='review_main'>
+                        {{ review.review }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Jeszcze nikt nie pomógł, możesz być pierwszy :)</p>
         {% endif %}
 
         {% if photo.owner == user %}

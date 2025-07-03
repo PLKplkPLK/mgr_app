@@ -5,8 +5,8 @@ from django.http import HttpResponseBadRequest
 
 import requests
 
-from .models import Photo
-from .forms import SendPhotoForm
+from .models import Photo, Review
+from .forms import SendPhotoForm, PostReviewForm
 
 @login_required
 def upload(request):
@@ -59,6 +59,8 @@ def photo_detail(request, uuid):
     Site to display details of a photo
     """
     photo = get_object_or_404(Photo, uuid=uuid)
+    post_review_form = PostReviewForm()
+    reviews = Review.objects.filter(photo=photo)
 
     if photo.prediction_1:
         prediction_1 = photo.prediction_1.split(';')[-1]
@@ -72,10 +74,16 @@ def photo_detail(request, uuid):
             "prediction_2": prediction_2,
             "prediction_pl": prediction_pl,
             "prediction_1_probability": prediction_1_probability,
-            "prediction_2_probability": prediction_2_probability
+            "prediction_2_probability": prediction_2_probability,
+            "post_review_form": post_review_form,
+            "reviews": reviews
         })
 
-    return render(request, "details.html", {"photo": photo})
+    return render(request, "details.html", {
+        "photo": photo,
+        "post_review_form": post_review_form,
+        "reviews": reviews
+    })
     
 @login_required
 def toggle_photo_privacy(request, uuid):
@@ -112,3 +120,21 @@ def toggle_review(request, uuid):
         return redirect(photo)
     
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
+
+@login_required
+def post_review(request, uuid):
+    """
+    View that handles posting a review
+    """
+    photo = get_object_or_404(Photo, uuid=uuid)
+    form = PostReviewForm(request.POST)
+
+    if request.method == "POST" and form.is_valid():
+        review_object = Review.objects.create(
+            owner = request.user,
+            photo = photo,
+            review = form.cleaned_data['review']
+        )
+        review_object.save()
+
+    return redirect(photo)

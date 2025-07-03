@@ -13,4 +13,5 @@ Postgresql and azure blob?
 
 #### TODO
 - dodawanie reviews
+- loading js
 - frontend

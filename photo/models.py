@@ -32,3 +32,10 @@ class Photo(models.Model):
         if self.prediction_1:
             return self.prediction_1.strip().split(";")[-1]
         return ""
+
+class Review(models.Model):
+    upload_time = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    review = models.TextField()
+    score = models.PositiveIntegerField(default=0)
