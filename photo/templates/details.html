@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Twoje zdjęcie</title>
+    <title>Przeglądanie zdjęć</title>
     <link rel="stylesheet" href="{% static 'photo/style.css' %}">
 </head>
 
@@ -48,14 +48,33 @@
                 {{ post_review_form }}
                 <button type="submit">Dodaj</button>
             </form>
-        {% endif %}
 
+            
         {% if reviews %}
             {% for review in reviews %}
                 <div class='review'>
                     <div class='review_upper'>
-                        {{ review.owner.username }}, {{ review.upload_time }}
-                        {{ review.score }}
+                        {{ review.owner.username }} | {{ review.upload_time }}
+
+                        {% if photo.owner == user %}
+                            <form method="post" action="{% url 'photo:toggle_helpful' review.id %}">
+                                {% csrf_token %}
+                                <button type="submit">
+                                    {% if review.helpful %} ✅ Odznacz pomocność {% else %} 🟩 Pomocny komentarz {% endif %}
+                                </button>
+                            </form>
+                        {% else %}
+                            {% if review.helpful %}
+                                <p style="color:green">✅ Pomocny komentarz</p>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if review.owner == user %}
+                            <form method="post" action="{% url 'photo:delete_review' review.id %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć ten komentarz?');">
+                                {% csrf_token %}
+                                <button type="submit">🗑️</button>
+                            </form>
+                        {% endif %}
                     </div>
                     <div class='review_main'>
                         {{ review.review }}
@@ -64,6 +83,8 @@
             {% endfor %}
         {% else %}
             <p>Jeszcze nikt nie pomógł, możesz być pierwszy :)</p>
+        {% endif %}
+
         {% endif %}
 
         {% if photo.owner == user %}

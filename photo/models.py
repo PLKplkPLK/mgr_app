@@ -38,4 +38,5 @@ class Review(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
     review = models.TextField()
-    score = models.PositiveIntegerField(default=0)
+    # score = models.PositiveIntegerField(default=0)
+    helpful = models.BooleanField(default=0)

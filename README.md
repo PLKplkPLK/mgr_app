@@ -12,6 +12,6 @@ DB:\
 Postgresql and azure blob?
 
 #### TODO
-- dodawanie reviews
+- usuwanie zdjęcia
 - loading js
 - frontend

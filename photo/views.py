@@ -138,3 +138,28 @@ def post_review(request, uuid):
         review_object.save()
 
     return redirect(photo)
+
+@login_required
+def toggle_helpful(request, review_id:int):
+    """
+    View that let's owner of photo mark or unmark comment as helpful
+    """
+    review = get_object_or_404(Review, id=review_id)
+
+    if review.photo.owner == request.user:
+        review.helpful = 0 if review.helpful else 1
+        review.save()
+
+    return redirect(review.photo)
+
+@login_required
+def delete_review(request, review_id:int):
+    """
+    View that let's post of review delete it
+    """
+    review = get_object_or_404(Review, id=review_id)
+
+    if review.owner == request.user:
+        review.delete()
+    
+    return redirect(review.photo)
