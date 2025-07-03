@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
 from django.http import HttpResponseBadRequest
 
 import requests
+import os
 
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
@@ -84,7 +84,25 @@ def photo_detail(request, uuid):
         "post_review_form": post_review_form,
         "reviews": reviews
     })
-    
+
+@login_required
+def delete_photo(request, uuid):
+    """
+    View that handles photo deletion
+    Deletes photo from database, disk and reviews associated
+    """
+    photo = get_object_or_404(Photo, uuid=uuid)
+    # delete photo from disk
+    photo_path = photo.image.path
+    print(photo_path) # TODO remove
+    if os.path.exists(photo_path):
+        os.remove(photo_path)
+    # from database
+    photo.delete()
+    # reviews are deleted automatically, because of CASCADE
+
+    return redirect('gallery:browse_my')
+
 @login_required
 def toggle_photo_privacy(request, uuid):
     """

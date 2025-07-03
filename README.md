@@ -12,6 +12,5 @@ DB:\
 Postgresql and azure blob?
 
 #### TODO
-- usuwanie zdjęcia
 - loading js
 - frontend
