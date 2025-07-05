@@ -4,41 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <title>Dodaj zdjęcie</title>
-    <link rel="stylesheet" href="{% static 'photo/style.css' %}">
+    <link rel="stylesheet" href="{% static 'photo/css/output.css' %}">
 </head>
 
-<body>
-    <div class="buttons-container">
-        <a class="button" href="{% url 'gallery:browse' %}">Przejdź do galerii</a>
-        <a class="button" href="{% url 'account:settings' %}">Przejdź do ustawień</a>
+<body class="body-main">
+<div class="div-whole">
+    <div class="mb-6 flex justify-around">
+        <a class="btn-main" href="{% url 'gallery:browse' %}">🖼️ Galeria</a>
+        <a class="btn-main" href="{% url 'account:settings' %}">⚙️ Ustawienia</a>
     </div>
 
-    <div class="upload-container">
-        <h2>Wyślij zdjęcie do rozpoznania</h2>
+    <div class="card-main">
+        <div class="card-inner">
+            <h2 class="card-title text-xl mb-6">Wyślij zdjęcie do rozpoznania</h2>
 
-        {% if form.errors %}
-        {% for error in field.errors %}
-            <h3>{{ error }}</h3>
-        {% endfor %}
-        {% endif %}
+            {% if form.errors %}
+                <div id="error1" class="bg-rose-100 alert alert-error mb-4 block text-center">
+                    <p class="text-lg">Wystąpił błąd w formularzu :(</p>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="">❌ {{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% elif error %}
+                <div id="error2" class="bg-rose-100 alert alert-error mb-4 block text-center w-fit">
+                    <p class="text-error text-rose-900">{{error}}</p>
+                </div>
+            {% endif %}
 
-        <h3>{{error}}</h3>
-
-        <form id="uploadPhotoForm" action="{% url 'photo:upload' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form }}
-            <input id="submit_button" type="submit" value="Wyślij"/>
-        </form>
-        
-        <div id="loading">
-            <div class="spinner"></div>
-            <p style="text-aling:center">Próbuję rozpoznać zwierzaka</p>
+            <form class="space-y-8" id="uploadPhotoForm" action="{% url 'photo:upload' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-control space-y-4 flex flex-col items-center">
+                    <fieldset class="fieldset">
+                        {{ form.image_file }}
+                        <label class="label">Maksymalnie 10MB</label>
+                    </fieldset>
+                    <fieldset class="fieldset bg-stone-50 border-base-300 rounded-box w-fit border p-2">
+                        <label class="label text-lg">
+                            {{ form.is_private }}
+                            Prywatne
+                        </label>
+                    </fieldset>
+                </div>
+                <button class="btn-second w-full">Wyślij</button>
+            </form>
+            
+            <div class="text-center hidden" id="loading">
+                <p style="text-aling:center">Próbuję rozpoznać zwierzaka</p>
+                <span class="loading loading-ring loading-xl"></span>
+            </div>
         </div>
     </div>
+</div>
 </body>
 
 <script>
 document.getElementById('uploadPhotoForm').addEventListener('submit', function () {
+    let error1 = document.getElementById('error1');
+    let error2 = document.getElementById('error2');
+    if (error1 != null) {
+        error1.style.display = 'none';
+    }
+    if (error2 != null) {
+        error2.style.display = 'none';
+    }
     document.getElementById('uploadPhotoForm').style.display = 'none';
     document.getElementById('loading').style.display = 'block';
 })

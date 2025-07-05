@@ -4,102 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Przeglądanie zdjęć</title>
-    <link rel="stylesheet" href="{% static 'photo/style.css' %}">
+    <link rel="stylesheet" href="{% static 'photo/css/output.css' %}">
 </head>
 
-<body>
-    <div class="buttons-container">
-        <a class="button" href="{% url 'gallery:browse' %}">Przejdź do galerii</a>
-        <a class="button" href="{% url 'account:settings' %}">Przejdź do ustawień</a>
-        <a class="button" href="{% url 'photo:upload' %}">Wyślij zdjęcie</a>
+<body class="body-main">
+<div class="div-whole">
+    <div class="mb-6 flex justify-around">
+        <a class="btn-main " href="{% url 'gallery:browse' %}">🖼️ Galeria</a>
+        <a class="btn-main " href="{% url 'account:settings' %}">⚙️ Ustawienia</a>
+        <a class="btn-main " href="{% url 'photo:upload' %}">📸 Wyślij</a>
     </div>
 
-    <div class="upload-container">
-        <img src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
-        <p>Data dodania: {{photo.upload_time}}</p>
-        {% if photo.is_private %}
-        <p>Zdjęcie jest prywatne</p>
-        {% else %}
-        <p>Zdjęcie jest publiczne</p>
-        {% endif %}
-
-        {% if photo.owner == user %}
-        <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
-            {% csrf_token %}
-            <button type="submit">
-                {% if photo.is_private %}Zmień zdjęcie na publiczne{% else %}Zmień zdjęcie na prywatne{% endif %}
-            </button>
-        </form>
-        {% endif %}
-
-        {% if prediction_1 %}
-        <p>Wykryto na zdjęciu: {{ prediction_1 }}</p>
-        {% else %}
-        <p>Klasyfikacja zwierzęcia jeszcze się nie zakończyła, lub wystąpił błąd.</p>
-        {% endif %}
-
-        {% if photo.owner == user %}
-            <form method="post" action="{% url 'photo:delete_photo' photo.uuid %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć zdjęcie?');">
-                {% csrf_token %}
-                <button type="submit">❌ Usuń zdjęcie</button>
-            </form>
-        {% endif %}
-
-        {% if photo.owner == user %}
-        <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
-            {% csrf_token %}
-            <button type="submit">
-                {% if photo.review_status != 1 %}Oznacz zdjęcie do sprawdzenia{% else %}Oznacz zdjęcie jako sprawdzone{% endif %}
-            </button>
-        </form>
-        {% endif %}
-
-        {% if photo.review_status == 0 %}
-            Zdjęcie nie było sprawdzane.
-        {% elif photo.review_status == 1 and photo.is_private %}
-            <p style="color: red">Zdjęcie musi być publiczne, aby mogło być sprawdzone przez innych użytkowników</p>
-        {% else %}
-            <form method="post" action="{% url 'photo:post_review' photo.uuid %}">
-                {% csrf_token %}
-                {{ post_review_form }}
-                <button type="submit">Dodaj</button>
-            </form>
-
-            {% if reviews %}
-                {% for review in reviews %}
-                    <div class='review'>
-                        <div class='review_upper'>
-                            {{ review.owner.username }} | {{ review.upload_time }}
-
-                            {% if photo.owner == user %}
-                                <form method="post" action="{% url 'photo:toggle_helpful' review.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit">
-                                        {% if review.helpful %} ✅ Odznacz pomocność {% else %} 🟩 Pomocny komentarz {% endif %}
-                                    </button>
-                                </form>
-                            {% else %}
-                                {% if review.helpful %}
-                                    <p style="color:green">✅ Pomocny komentarz</p>
-                                {% endif %}
-                            {% endif %}
-
-                            {% if review.owner == user %}
-                                <form method="post" action="{% url 'photo:delete_review' review.id %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć ten komentarz?');">
-                                    {% csrf_token %}
-                                    <button type="submit">🗑️</button>
-                                </form>
-                            {% endif %}
-                        </div>
-                        <div class='review_main'>
-                            {{ review.review }}
-                        </div>
-                    </div>
-                {% endfor %}
+    <div class="card-main">
+        <div class="card-inner">
+            {% if prediction_1 %}
+            <h2 class="card-title text-xl mb-4">{{ prediction_1 }}</h2>
             {% else %}
-                <p>Jeszcze nikt nie pomógł, możesz być pierwszy :)</p>
+            <p>Wystąpił błąd podczas klasyfikacji.</p>
             {% endif %}
-        {% endif %}
+
+            <div class="flex flex-col">
+                <img src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
+                <p class="right-2 text-stone-600 text-sm self-end">{{photo.upload_time}}</p>
+            </div>
+
+            {% if photo.owner == user %}
+            <div class="flex justify-evenly w-full">
+                <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
+                    {% csrf_token %}
+                    <button class='btn-second' type="submit">
+                        {% if photo.is_private %}🔒 Prywatne{% else %}🔓 Publiczne{% endif %}
+                    </button>
+                </form>
+
+                <form method="post" action="{% url 'photo:delete_photo' photo.uuid %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć zdjęcie?');">
+                    {% csrf_token %}
+                    <button class='btn-second' type="submit">🗑️ Usuń</button>
+                </form>
+            </div>
+            {% endif %}
+ 
+            {% if photo.owner == user %}
+            <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
+                {% csrf_token %}
+                <button class='btn-second' type="submit">
+                    {% if photo.review_status != 1 %}📋 Sprawdź{% else %}✅ Sprawdzone{% endif %}
+                </button>
+            </form>
+            {% endif %}
+
+            {% if photo.review_status == 0 %}
+                Zdjęcie nie było sprawdzane.
+            {% elif photo.review_status == 1 and photo.is_private %}
+                <p style="color: red">Zdjęcie musi być publiczne, aby mogło być sprawdzone przez innych użytkowników</p>
+            {% else %}
+                {% if photo.review_status == 1 %}
+                    <form method="post" action="{% url 'photo:post_review' photo.uuid %}">
+                        {% csrf_token %}
+                        {{ post_review_form }}
+                        <button type="submit">Dodaj</button>
+                    </form>
+                {% endif %}
+
+                {% if reviews %}
+                    {% for review in reviews %}
+                        <div class='review'>
+                            <div class='review_upper'>
+                                {{ review.owner.username }} | {{ review.upload_time }}
+
+                                {% if photo.owner == user %}
+                                    <form method="post" action="{% url 'photo:toggle_helpful' review.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit">
+                                            {% if review.helpful %} ✅ Odznacz pomocność {% else %} 🟩 Pomocny komentarz {% endif %}
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    {% if review.helpful %}
+                                        <p style="color:green">✅ Pomocny komentarz</p>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if review.owner == user %}
+                                    <form method="post" action="{% url 'photo:delete_review' review.id %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć ten komentarz?');">
+                                        {% csrf_token %}
+                                        <button type="submit">🗑️</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                            <div class='review_main'>
+                                {{ review.review }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
+</div>
 </body>
 </html>

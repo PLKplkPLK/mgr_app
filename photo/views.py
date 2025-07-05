@@ -44,7 +44,9 @@ def upload(request):
                 image_object.prediction_2_probability = response['classifications']['scores'][1]
                 image_object.save()
             except Exception as e:
-                # the photo file still stays on disk - TODO
+                photo_path = image_object.image.path
+                if os.path.exists(photo_path):
+                    os.remove(photo_path)
                 image_object.delete()
                 return render(request, "upload.html", {"form": form, "error": "Nie można połączyć się z serwerem"})
 
@@ -94,7 +96,6 @@ def delete_photo(request, uuid):
     photo = get_object_or_404(Photo, uuid=uuid)
     # delete photo from disk
     photo_path = photo.image.path
-    print(photo_path) # TODO remove
     if os.path.exists(photo_path):
         os.remove(photo_path)
     # from database

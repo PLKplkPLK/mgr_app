@@ -4,8 +4,15 @@ from PIL import Image
 MAX_FILE_SIZE = 1e7
 
 class SendPhotoForm(forms.Form):
-    image_file = forms.ImageField(label="Zdjęcie", required=True)
-    is_private = forms.BooleanField(label="Czy zdjęcie ma być prywatne?", required=False)
+    image_file = forms.ImageField(
+        label="",
+        required=True,
+        widget=forms.ClearableFileInput(attrs={'class': 'file-input file-input-lg'})
+    )
+    is_private = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'checkbox checkbox-lg'})
+    )
 
     def clean_image_file(self):
         image = self.cleaned_data.get('image_file')
