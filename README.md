@@ -9,7 +9,7 @@ python manage.py [command]\
 commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 tailwind:\
-mgr_app\photo\static\photo\css> .\tailwindcss-windows-x64.exe -i .\input.css -o output.css --watch
+cd .\photo\static\photo\css\ && .\tailwindcss-windows-x64.exe -i .\input.css -o output.css --watch
 
 DB:\
 Postgresql and azure blob?
