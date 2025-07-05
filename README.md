@@ -17,3 +17,4 @@ Postgresql and azure blob?
 #### TODO
 - frontend
 - w detalach podać więcej informacji dot. klasyfikacji
+- możliwość zmiany przypisanego zwierzęcia?

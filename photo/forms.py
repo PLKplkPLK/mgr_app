@@ -33,4 +33,7 @@ class SendPhotoForm(forms.Form):
         return image
 
 class PostReviewForm(forms.Form):
-    review = forms.CharField(widget=forms.Textarea, label="Właściciel zdjęcia chce twojej pomocy w weryfikacji zwierzęcia:")
+    review = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'textarea h-24 w-full', 'placeholder': 'Komentarz'}),
+        label=""
+    )
