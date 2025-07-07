@@ -8,6 +8,13 @@ import os
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
 
+map_animals_pl = {
+    'red fox': 'Lis',
+    'brown bear': 'Niedźwiedź',
+    'grey wolf': 'Wilk szary',
+    'domestic cat': 'Kot domowy',
+}
+
 @login_required
 def upload(request):
     """
@@ -37,9 +44,9 @@ def upload(request):
                 response = requests.post(url, json=data).json()
                 response = response['predictions'][0]
 
-                image_object.prediction_1  = response['classifications']['classes'][0]
-                image_object.prediction_2  = response['classifications']['classes'][1]
-                image_object.prediction_pl = response['prediction']
+                image_object.prediction_1  = map_animals_pl.setdefault(response['classifications']['classes'][0].strip().split(";")[-1], response['classifications']['classes'][0].strip().split(";")[-1])
+                image_object.prediction_2  = map_animals_pl.setdefault(response['classifications']['classes'][1].strip().split(";")[-1], response['classifications']['classes'][1].strip().split(";")[-1])
+                image_object.prediction_pl = map_animals_pl.setdefault(response['prediction'].strip().split(";")[-1], response['prediction'].strip().split(";")[-1])
                 image_object.prediction_1_probability = response['classifications']['scores'][0]
                 image_object.prediction_2_probability = response['classifications']['scores'][1]
                 image_object.save()

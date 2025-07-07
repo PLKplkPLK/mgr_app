@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @plugin "./daisyui.js";
 @source "../../../templates/photo";
+@source "../../../../forms.py";
 
 @layer components {
   .btn-main {

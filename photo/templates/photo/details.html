@@ -6,7 +6,7 @@
         <div class="card-inner">
             <div class="flex flex-col">
                 <div class="justify-between p-2 flex items-center">
-                    <div class="text-2xl">{% if prediction_1 %} {{ photo.prediction_1_clean }} {% else %} <p>Wystąpił błąd podczas klasyfikacji.</p> {% endif %}</div>
+                    <div class="text-2xl">{% if prediction_1 %} {{ photo.prediction_1 }} {% else %} <p>Wystąpił błąd podczas klasyfikacji.</p> {% endif %}</div>
                     <div class="text-stone-500 text-sm">{{photo.upload_time}}</div>
                 </div>
                 <img class="my-2 rounded-xs" src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
@@ -47,19 +47,19 @@
                         {% for review in reviews %}
                             <div class="chat chat-start pb-4">
                                 <div class="chat-image avatar">
-                                    <div class="w-10 rounded-full bg-stone-400">{{ review.owner.username }}</div>
+                                    <div class="w-11 rounded-full bg-stone-300">{{ review.owner.avatar }}</div>
                                 </div>
                                 <div class="chat-header">
-                                    <p class="text-sm mr-4">{{ review.owner.username }}</p>
+                                    <p class="text-sm mr-4">{{ review.owner.username }} {% if review.owner.score > 99 %}👑{% endif %}</p>
                                     <p class="text-xs opacity-50">{{ review.upload_time }}</p>
                                 </div>
                                 <div class="chat-bubble {% if review.helpful %}bg-green-100{% else %}bg-base-300{% endif%}">
                                     {{ review.review }}
                                 </div>
 
-                                <div class="chat-footer flex justify-between size-9/10 p-1">
+                                <div class="chat-footer flex justify-left p-1">
                                     {% if review.helpful and photo.owner != user %}
-                                        <span class="text-green-600" title="Komentarz oznaczony, jako pomocny">Pomocny</span>
+                                        <span class="text-green-600 mr-2" title="Komentarz oznaczony, jako pomocny">Pomocny</span>
                                     {% endif %}
 
                                     {% if photo.owner == user %}

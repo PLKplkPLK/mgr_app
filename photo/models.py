@@ -26,17 +26,10 @@ class Photo(models.Model):
 
     def get_absolute_url(self):
         return reverse("photo:photo_detail", kwargs={"uuid": self.uuid})
-    
-    @property
-    def prediction_1_clean(self):
-        if self.prediction_1:
-            return self.prediction_1.strip().split(";")[-1]
-        return ""
 
 class Review(models.Model):
     upload_time = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
     review = models.TextField()
-    # score = models.PositiveIntegerField(default=0)
     helpful = models.BooleanField(default=0)
