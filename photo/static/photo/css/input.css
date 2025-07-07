@@ -13,7 +13,7 @@
     @apply bg-slate-50 min-h-screen flex items-center justify-center p-4;
   }
   .div-whole {
-    @apply w-full max-w-xl;
+    @apply w-full max-w-[800px];
   }
   .card-main {
     @apply bg-stone-100;

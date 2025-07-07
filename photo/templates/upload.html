@@ -1,19 +1,7 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dodaj zdjęcie</title>
-    <link rel="stylesheet" href="{% static 'photo/css/output.css' %}">
-</head>
+{% extends 'base.html' %}
 
-<body class="body-main">
+{% block content %}
 <div class="div-whole">
-    <div class="mb-6 flex justify-around">
-        <a class="btn-main" href="{% url 'gallery:browse' %}">🖼️ Galeria</a>
-        <a class="btn-main" href="{% url 'account:settings' %}">⚙️ Ustawienia</a>
-    </div>
-
     <div class="card-main">
         <div class="card-inner">
             <h2 class="card-title text-xl mb-6">Wyślij zdjęcie do rozpoznania</h2>
@@ -57,7 +45,6 @@
         </div>
     </div>
 </div>
-</body>
 
 <script>
 document.getElementById('uploadPhotoForm').addEventListener('submit', function () {
@@ -73,4 +60,5 @@ document.getElementById('uploadPhotoForm').addEventListener('submit', function (
     document.getElementById('loading').style.display = 'block';
 })
 </script>
-</html>
+
+{% endblock %}
