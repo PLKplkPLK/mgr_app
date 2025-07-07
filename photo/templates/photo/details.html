@@ -1,17 +1,14 @@
 {% extends 'photo/base.html' %}
 
 {% block content %}
-<div class="div-whole">
+<div class="div-whole mb-10">
     <div class="card-main">
         <div class="card-inner">
-            {% if prediction_1 %}
-            <h2 class="card-title text-xl">{{ prediction_1 }}</h2>
-            {% else %}
-            <p>Wystąpił błąd podczas klasyfikacji.</p>
-            {% endif %}
-
             <div class="flex flex-col">
-                <p class="right-2 text-stone-600 text-sm self-end">{{photo.upload_time}}</p>
+                <div class="justify-between p-2 flex items-center">
+                    <div class="text-2xl">{% if prediction_1 %} {{ photo.prediction_1_clean }} {% else %} <p>Wystąpił błąd podczas klasyfikacji.</p> {% endif %}</div>
+                    <div class="text-stone-500 text-sm">{{photo.upload_time}}</div>
+                </div>
                 <img class="my-2 rounded-xs" src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
             </div>
 
@@ -60,47 +57,52 @@
                 {% endif %}
 
                 {% if reviews %}
-                    {% for review in reviews %}
-                        <div class="review bg-base-100 shadow-md rounded-md p-4 space-y-4 border border-base-200 w-100">
-                            <div class="review_upper flex justify-between items-start text-sm text-base-content">
-                                <div>
-                                    <span class="font-semibold">{{ review.owner.username }}</span>
-                                    <span class="text-xs text-base-content/70 ml-2">{{ review.upload_time }}</span>
-                                    {% if review.helpful %}
-                                        <span class="ml-2 badge badge-success text-xs" title="Komentarz oznaczony, jako pomocny">✅</span>
-                                    {% endif %}
+                    <div>
+                        {% for review in reviews %}
+                            <div class="chat chat-start pb-4">
+                                <div class="chat-image avatar">
+                                    <div class="w-10 rounded-full bg-stone-400">{{ review.owner.username }}</div>
+                                </div>
+                                <div class="chat-header">
+                                    {{ review.owner.username }}
+                                    <time class="text-xs opacity-50">{{ review.upload_time }}</time>
+                                </div>
+                                <div class="chat-bubble {% if review.helpful %}bg-green-100{% else %}bg-base-300{% endif%}">
+                                    {{ review.review }}
                                 </div>
 
-                                <div class="flex gap-2 items-center">
+                                <div class="chat-footer flex justify-between size-9/10 p-1">
+                                    {% if review.helpful and photo.owner != user %}
+                                        <span class="text-green-600" title="Komentarz oznaczony, jako pomocny">Pomocny</span>
+                                    {% endif %}
+
                                     {% if photo.owner == user %}
                                         <form method="post" action="{% url 'photo:toggle_helpful' review.id %}">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-xs btn-outline btn-success ml-2">
+                                            <button type="submit" class="btn btn-xs">
                                                 {% if review.helpful %}
-                                                    ✅ Odznacz
+                                                    ✅ Pomocny
                                                 {% else %}
-                                                    🟩 Pomocny
+                                                    🟩 Pomocny?
                                                 {% endif %}
                                             </button>
                                         </form>
                                     {% endif %}
 
                                     {% if review.owner == user %}
-                                        <form method="post" action="{% url 'photo:delete_review' review.id %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć ten komentarz?');">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-xs btn-outline btn-error">
-                                                🗑️
-                                            </button>
-                                        </form>
+                                        <span class="">
+                                            <form method="post" action="{% url 'photo:delete_review' review.id %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć ten komentarz?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-xs">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </span>
                                     {% endif %}
                                 </div>
                             </div>
-
-                            <div class="review_main prose max-w-none text-base">
-                                {{ review.review }}
-                            </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 {% endif %}
             {% endif %}
         </div>

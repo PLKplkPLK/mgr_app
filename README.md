@@ -15,9 +15,9 @@ DB:\
 Postgresql and azure blob?
 
 #### TODO
-- frontend konta
-- wyświetlanie komentarzy?
+- naprawić dock - jak strona jest długa
 - w detalach podać więcej informacji dot. klasyfikacji
+- zmienić nazwy na polskie
 - więcej jeśli chodzi o konto dodać, hasło, email itp
-- score ile użytkownik ma oznaczonych komentarzy, jako pomocne
+- score ile użytkownik ma oznaczonych komentarzy, jako pomocne. Wtedy, gdy ktoś ma więcej niż 100? ma złote komentarze, czy coś
 - możliwość zmiany przypisanego zwierzęcia?
