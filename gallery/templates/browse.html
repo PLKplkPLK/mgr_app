@@ -1,32 +1,24 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Przeglądaj zdjęcia</title>
-    <link rel="stylesheet" href="{% static 'gallery/style.css' %}">
-</head>
-<body>
-    <div class="buttons-container">
-        <a class="button" href="{% url 'photo:upload' %}">Wyślij zdjęcie</a>
-        <a class="button" href="{% url 'account:settings' %}">Przejdź do ustawień</a>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="browse-container">
+    <div role="tablist" class="tabs tabs-lift">
+        <a role="tab" class="tab" href="{% url 'gallery:browse_my' %}">Moje</a>
+        <a role="tab" class="tab tab-active" href="{% url 'gallery:browse' %}">Innych</a>
+        <a role="tab" class="tab" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
     </div>
 
-    <div class="browse-container">
-        <a class="button" href="{{ redirection_url_1 }}">{{ redirection_text_1 }}</a>
-        <a class="button" href="{{ redirection_url_2 }}">{{ redirection_text_2 }}</a>
-        <div>
-            {% if photos %}
-                {% for photo in photos %}
-                    <a href="{% url 'photo:photo_detail' photo.uuid %}">
-                        <h3>{{ photo.prediction_1_clean }}</h3>
-                        <img src={{ photo.image.url }} alt="Zdjęcie zwierzątka">
-                    </a>
-                {% endfor %}
-            {% else %}
-                <p>Brak zdjęć</p>
-            {% endif %}
-        </div>
+    <div>
+        {% if photos %}
+            {% for photo in photos %}
+                <a href="{% url 'photo:photo_detail' photo.uuid %}">
+                    <h3>{{ photo.prediction_1_clean }}</h3>
+                    <img class="rounded-lg" src={{ photo.image.url }} alt="Zdjęcie zwierzątka">
+                </a>
+            {% endfor %}
+        {% else %}
+            <p>Brak zdjęć</p>
+        {% endif %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
