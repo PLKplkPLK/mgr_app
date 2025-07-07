@@ -1,8 +1,10 @@
 {% extends 'account/base_not_logged.html' %}
+{% load static %}
 
 {% block content %}
 <div class="flex flex-col text-center space-y-6">
-    <h2 class="text-2xl">Stwórz konto</h2>
+    <img class="w-[200px] m-auto flex items-center mb-4" src={% static 'logo_blank.png' %} />
+    <h2 class="text-2xl">Tworzenie konta</h2>
 
     <form action="{% url 'account:signup' %}" method="POST">
         {% csrf_token %}
@@ -28,5 +30,7 @@
 
         <button class="btn-main mt-4" type="submit">Zarejestruj się</button>
     </form>
+
+    <a class="btn text-lime-800" href="{% url 'account:signin' %}">Mam już konto</a>
 </div>
 {% endblock %}

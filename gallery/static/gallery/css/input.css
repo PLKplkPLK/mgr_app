@@ -1,6 +1,6 @@
 @import "tailwindcss" source(none);
 @plugin "./daisyui.js";
-@source "../../../templates";
+@source "../../../templates/gallery";
 
 @layer components {
   .btn-main {
@@ -10,7 +10,7 @@
     @apply btn btn-lg text-lime-700 bg-stone-200 shadow;
   }
   .body-main {
-    @apply bg-slate-50 min-h-screen flex items-center justify-center p-4;
+    @apply bg-slate-50 min-h-screen flex justify-center p-4;
   }
   .div-whole {
     @apply w-full max-w-[800px];

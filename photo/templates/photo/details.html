@@ -1,8 +1,8 @@
 {% extends 'photo/base.html' %}
 
 {% block content %}
-<div class="div-whole mb-10">
-    <div class="card-main">
+<div class="div-whole mb-18">
+    <div class="">
         <div class="card-inner">
             <div class="flex flex-col">
                 <div class="justify-between p-2 flex items-center">
@@ -42,20 +42,6 @@
             {% elif photo.review_status == 1 and photo.is_private %}
                 <p style="color: red">Zdjęcie musi być publiczne, aby mogło być sprawdzone przez innych użytkowników</p>
             {% else %}
-                {% if photo.review_status == 1 %}
-                    <form class="mb-4" method="post" action="{% url 'photo:post_review' photo.uuid %}">
-                        {% csrf_token %}
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Właściciel zdjęcia chce twojej pomocy w weryfikacji zwierzęcia</legend>
-                            {{ post_review_form }}
-                        </fieldset>
-
-                        <div class="flex justify-end">
-                            <button class="btn-second" type="submit">Dodaj</button>
-                        </div>
-                    </form>
-                {% endif %}
-
                 {% if reviews %}
                     <div>
                         {% for review in reviews %}
@@ -64,8 +50,8 @@
                                     <div class="w-10 rounded-full bg-stone-400">{{ review.owner.username }}</div>
                                 </div>
                                 <div class="chat-header">
-                                    {{ review.owner.username }}
-                                    <time class="text-xs opacity-50">{{ review.upload_time }}</time>
+                                    <p class="text-sm mr-4">{{ review.owner.username }}</p>
+                                    <p class="text-xs opacity-50">{{ review.upload_time }}</p>
                                 </div>
                                 <div class="chat-bubble {% if review.helpful %}bg-green-100{% else %}bg-base-300{% endif%}">
                                     {{ review.review }}
@@ -103,6 +89,20 @@
                             </div>
                         {% endfor %}
                     </div>
+                {% endif %}
+
+                {% if photo.review_status == 1 %}
+                    <form class="mb-4 w-3/5 h-1/6" method="post" action="{% url 'photo:post_review' photo.uuid %}">
+                        {% csrf_token %}
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Pomóż w weryfikacji zwierzaka</legend>
+                            {{ post_review_form }}
+                        </fieldset>
+
+                        <div class="flex justify-end mt-2">
+                            <button class="btn-main" type="submit">Dodaj</button>
+                        </div>
+                    </form>
                 {% endif %}
             {% endif %}
         </div>

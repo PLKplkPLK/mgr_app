@@ -1,8 +1,9 @@
 {% extends 'gallery/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="browse-container">
-    <div role="tablist" class="tabs tabs-lift tabs-xl justify-center">
+<div class="browse-container items-top">
+    <div role="tablist" class="tabs tabs-lift tabs-xl justify-center mb-4">
         <a role="tab" class="{% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_my' %}">Moje</a>
         <a role="tab" class="{% if request.resolver_match.url_name == 'browse' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse' %}">Społeczność</a>
         <a role="tab" class="{% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>

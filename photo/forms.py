@@ -34,6 +34,6 @@ class SendPhotoForm(forms.Form):
 
 class PostReviewForm(forms.Form):
     review = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'textarea h-24 w-full', 'placeholder': 'Komentarz'}),
+        widget=forms.Textarea(attrs={'rows': 2, 'class': "textarea w-full", 'placeholder': 'Komentarz'}),
         label=""
     )

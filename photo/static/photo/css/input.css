@@ -1,6 +1,6 @@
 @import "tailwindcss" source(none);
 @plugin "./daisyui.js";
-@source "../../../templates";
+@source "../../../templates/photo";
 
 @layer components {
   .btn-main {
@@ -14,9 +14,6 @@
   }
   .div-whole {
     @apply w-full max-w-[800px];
-  }
-  .card-main {
-    @apply bg-stone-100;
   }
   .card-inner {
     @apply card-body flex items-center text-lg;

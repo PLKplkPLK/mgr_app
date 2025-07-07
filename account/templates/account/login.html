@@ -1,7 +1,9 @@
 {% extends 'account/base_not_logged.html' %}
+{% load static %}
 
 {% block content %}
 <div class="flex flex-col text-center space-y-6">
+    <img class="w-[200px] m-auto flex items-center mb-4" src={% static 'logo_blank.png' %} />
     <h2 class="text-2xl">Logowanie</h2>
 
     <form class="flex flex-col items-center" action="{% url 'account:signin' %}" method="POST">
@@ -20,9 +22,7 @@
         <button class="btn-main mt-4" type="submit">Zaloguj</button>
     </form>
 
-    <div class="buttons-container">
-        <!-- <a class="button" href="#">Zapomniałeś hasła?</a> -->
-        <a class="btn text-lime-800" href="{% url 'account:signup' %}">Stwórz konto</a>
-    </div>
+    <!-- <a class="button" href="#">Zapomniałeś hasła?</a> -->
+    <a class="btn text-lime-800" href="{% url 'account:signup' %}">Stwórz konto</a>
 </div>
 {% endblock %}

@@ -1,8 +1,13 @@
 {% extends 'photo/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="div-whole">
-    <div class="card-main">
+    <div class="size-1/4 m-auto flex items-center mb-4">
+        <img src={% static 'logo_blank.png' %} />
+    </div>
+
+    <div class="">
         <div class="card-inner">
             <h2 class="card-title text-xl mb-6">Wyślij zdjęcie do rozpoznania</h2>
 
@@ -35,7 +40,7 @@
                         </label>
                     </fieldset>
                 </div>
-                <button class="btn-second w-full">Wyślij</button>
+                <button class="btn-main w-full">Wyślij</button>
             </form>
             
             <div class="text-center hidden" id="loading">
