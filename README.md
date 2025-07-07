@@ -15,8 +15,9 @@ DB:\
 Postgresql and azure blob?
 
 #### TODO
-- dock
-- frontend
+- frontend konta
+- wyświetlanie komentarzy?
 - w detalach podać więcej informacji dot. klasyfikacji
+- więcej jeśli chodzi o konto dodać, hasło, email itp
 - score ile użytkownik ma oznaczonych komentarzy, jako pomocne
 - możliwość zmiany przypisanego zwierzęcia?

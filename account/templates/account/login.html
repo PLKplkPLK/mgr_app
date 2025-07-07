@@ -1,26 +1,28 @@
-{% load static %}
-<header>
-    <link rel="stylesheet" href="{% static 'account/style.css' %}">
-</header>
+{% extends 'account/base_not_logged.html' %}
 
-<body>
-<div class="signup-container">
-    <h2>Zaloguj się</h2>
+{% block content %}
+<div class="flex flex-col text-center space-y-6">
+    <h2 class="text-2xl">Logowanie</h2>
 
-    <form action="{% url 'account:signin' %}" method="POST">
+    <form class="flex flex-col items-center" action="{% url 'account:signin' %}" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <label>Nazwa użytkownika:</label>
-        <input name="username" type="text" />
-        <label>Hasło:</label>
-        <input name="password" type="password" />
-        <button type="submit">Zaloguj</button>
+        {{ form.non_field_errors }}
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">Nazwa użytkownika</legend>
+            {{ form.username.errors }}
+            {{ form.username }}
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">Hasło</legend>
+            {{ form.password.errors }}
+            {{ form.password }}
+        </fieldset>
+        <button class="btn-main mt-4" type="submit">Zaloguj</button>
     </form>
 
     <div class="buttons-container">
         <!-- <a class="button" href="#">Zapomniałeś hasła?</a> -->
-        <a class="button" href="{% url 'account:signup_page' %}">Stwórz konto</a>
+        <a class="btn text-lime-800" href="{% url 'account:signup' %}">Stwórz konto</a>
     </div>
-
 </div>
-</body>
+{% endblock %}

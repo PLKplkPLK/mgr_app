@@ -1,12 +1,15 @@
-{% load static %}
-<header>
-    <link rel="stylesheet" href="{% static 'account/style.css' %}">
-</header>
+{% extends 'account/base.html' %}
 
-<body>
-    <div class="buttons-container">
-        <a class="button" href="{% url 'gallery:browse' %}">Przejdź do galerii</a>
-        <a class="button" href="{% url 'photo:upload' %}">Wyślij zdjęcie</a>
-        <a class="button" href="{% url 'account:signout' %}">Wyloguj się</a>
+{% block content %}
+<div class="flex flex-col items-center">
+    <div class="avatar avatar-placeholder my-10">
+        <div class="bg-neutral text-neutral-content w-24 rounded-full">
+            <span class="text-3xl">{{ user.username }}</span>
+        </div>
     </div>
-</body>
+    
+    <div class="buttons-container">
+        <a class="btn-main" href="{% url 'account:signout' %}">Wyloguj się</a>
+    </div>
+</div>
+{% endblock %}

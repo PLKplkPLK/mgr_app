@@ -4,7 +4,7 @@
 
 @layer components {
   .btn-main {
-    @apply btn btn-xl text-lime-800 bg-stone-200 shadow;
+    @apply btn btn-xl text-lime-800 bg-stone-50 shadow hover:bg-stone-200;
   }
   .btn-second {
     @apply btn btn-lg text-lime-700 bg-stone-200 shadow;

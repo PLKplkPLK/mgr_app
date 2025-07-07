@@ -1,50 +1,63 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django import forms
 
-def signup_page(request):
-    """
-    Render a site to create user
-    """
-    if request.user.is_authenticated:
-        return redirect('/photo')
-    else:
-        return render(request, 'account/sign_up.html')
-
-def create(request):
-    """
-    Create a user
-    """
-    user = User.objects.create_user(
-        request.POST['username'], request.POST['email'], request.POST['password']
+class StyledUserCreationForm(UserCreationForm):
+    username = forms.CharField(
+        label='Nazwa użytkownika',
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nick'})
     )
-    
-    return redirect('/photo')
+    password1 = forms.CharField(
+        label='Hasło',
+        widget=forms.PasswordInput(attrs={'class': 'input'})
+    )
+    password2 = forms.CharField(
+        label='Powtórz hasło',
+        widget=forms.PasswordInput(attrs={'class': 'input'})
+    )
 
-def login_page(request):
+def signup(request):
     """
-    Render a login page
+    Create user or return sign up page
     """
     if request.user.is_authenticated:
         return redirect('/photo')
     
-    return render(request, 'account/login.html')
+    if request.method == 'POST':
+        form = StyledUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('/photo')
+    else:
+        form = StyledUserCreationForm()
+    
+    return render(request, 'account/sign_up.html', {'form': form})
+
+class StyledAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nick'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input'}))
 
 def signin(request):
     """
-    Authenticate user
+    Authenticate user or return login page
     """
-    username = request.POST["username"]
-    password = request.POST["password"]
-    user = authenticate(request, username=username, password=password)
-
-    if user is not None:
-        login(request, user)
+    if request.user.is_authenticated:
         return redirect('/photo')
+
+    if request.method == 'POST':
+        form = StyledAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('/photo')
     else:
-        # to be changed
-        return redirect('account:login_page')
+        form = StyledAuthenticationForm()
+
+    return render(request, 'account/login.html', {'form': form})
 
 @login_required
 def settings(request):
@@ -59,4 +72,4 @@ def signout(request):
     Logout user
     """
     logout(request)
-    return redirect('account:login_page')
+    return redirect('account:signin')

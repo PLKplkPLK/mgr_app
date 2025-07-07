@@ -1,27 +1,32 @@
-{% load static %}
-<header>
-    <link rel="stylesheet" href="{% static 'account/style.css' %}">
-</header>
+{% extends 'account/base_not_logged.html' %}
 
-<body>
-<div class="signup-container">
-    <h2>Stwórz konto</h2>
+{% block content %}
+<div class="flex flex-col text-center space-y-6">
+    <h2 class="text-2xl">Stwórz konto</h2>
 
-    <form action="{% url 'account:create' %}" method="POST">
+    <form action="{% url 'account:signup' %}" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <label>Nazwa użytkownika:</label>
-        <input name="username" type="text" />
-        <label>Email:</label>
-        <input name="email" type="email" />
-        <label>Hasło:</label>
-        <input name="password" type="password" />
-        <button type="submit">Stwórz</button>
+        {{ form.non_field_errors }}
+
+        <fieldset class="fieldset">
+            {{ form.username.label_tag }}
+            {{ form.username.errors }}
+            {{ form.username }}
+        </fieldset>
+
+        <fieldset class="fieldset">
+            {{ form.password1.label_tag }}
+            {{ form.password1.errors }}
+            {{ form.password1 }}
+        </fieldset>
+
+        <fieldset class="fieldset">
+            {{ form.password2.label_tag }}
+            {{ form.password2.errors }}
+            {{ form.password2 }}
+        </fieldset>
+
+        <button class="btn-main mt-4" type="submit">Zarejestruj się</button>
     </form>
-
-    <div class="buttons-container">
-        <a class="button" href="{% url 'account:login_page' %}">Przejdź do logowania</a>
-    </div>
-
 </div>
-</body>
+{% endblock %}
