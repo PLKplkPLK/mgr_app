@@ -1,0 +1,33 @@
+{% extends 'gallery/base.html' %}
+
+{% block content %}
+<div class="browse-container">
+    <div role="tablist" class="tabs tabs-lift tabs-xl justify-center">
+        <a role="tab" class="{% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_my' %}">Moje</a>
+        <a role="tab" class="{% if request.resolver_match.url_name == 'browse' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse' %}">Społeczność</a>
+        <a role="tab" class="{% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% if photos %}
+            {% for photo in photos %}
+                <a class="text-center text-2xl" href="{% url 'photo:photo_detail' photo.uuid %}">
+                    <div class="card bg-base-100 shadow-sm w-full">
+                        <figure>
+                            <img
+                            src="{{ photo.image.url }}"
+                            alt="Zdjęcie zwierzątka" />
+                        </figure>
+                        <div class="justify-between p-4 flex items-center">
+                            <div>{{ photo.prediction_1_clean }}</div>
+                            <div class="text-stone-500 text-sm">{{photo.upload_time}}</div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p>Brak zdjęć</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

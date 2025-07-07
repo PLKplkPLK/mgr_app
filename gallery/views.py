@@ -12,7 +12,7 @@ def browse(request):
     """
     photos = Photo.objects.filter(is_private=False)[:10]
     
-    return render(request, "browse.html", {
+    return render(request, "gallery/browse.html", {
         "photos": photos
     })
 
@@ -23,7 +23,7 @@ def browse_my(request):
     """
     photos = Photo.objects.filter(owner=request.user.id)
 
-    return render(request, "browse.html", {
+    return render(request, "gallery/browse.html", {
         "photos": photos
     })
 
@@ -34,6 +34,6 @@ def browse_reviews(request):
     """
     photos = Photo.objects.filter(is_private=False, review_status=1)
     
-    return render(request, "browse.html", {
+    return render(request, "gallery/browse.html", {
         "photos": photos
     })

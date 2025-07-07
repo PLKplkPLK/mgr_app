@@ -48,12 +48,12 @@ def upload(request):
                 if os.path.exists(photo_path):
                     os.remove(photo_path)
                 image_object.delete()
-                return render(request, "upload.html", {"form": form, "error": "Nie można połączyć się z serwerem"})
+                return render(request, "photo/upload.html", {"form": form, "error": "Nie można połączyć się z serwerem"})
 
             return redirect(image_object)
     else:
         form = SendPhotoForm()
-    return render(request, "upload.html", {"form": form})
+    return render(request, "photo/upload.html", {"form": form})
 
 @login_required
 def photo_detail(request, uuid):
@@ -70,7 +70,7 @@ def photo_detail(request, uuid):
         prediction_pl = photo.prediction_pl.split(';')[-1]
         prediction_1_probability = photo.prediction_1_probability
         prediction_2_probability = photo.prediction_2_probability
-        return render(request, "details.html", {
+        return render(request, "photo/details.html", {
             "photo": photo,
             "prediction_1": prediction_1,
             "prediction_2": prediction_2,
@@ -81,7 +81,7 @@ def photo_detail(request, uuid):
             "reviews": reviews
         })
 
-    return render(request, "details.html", {
+    return render(request, "photo/details.html", {
         "photo": photo,
         "post_review_form": post_review_form,
         "reviews": reviews

@@ -10,7 +10,7 @@ def signup_page(request):
     if request.user.is_authenticated:
         return redirect('/photo')
     else:
-        return render(request, 'sign_up.html')
+        return render(request, 'account/sign_up.html')
 
 def create(request):
     """
@@ -29,7 +29,7 @@ def login_page(request):
     if request.user.is_authenticated:
         return redirect('/photo')
     
-    return render(request, 'login.html')
+    return render(request, 'account/login.html')
 
 def signin(request):
     """
@@ -51,7 +51,7 @@ def settings(request):
     """
     Render a settings page
     """
-    return render(request, 'settings.html')
+    return render(request, 'account/settings.html')
 
 @login_required
 def signout(request):
