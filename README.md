@@ -22,3 +22,4 @@ Postgresql and azure blob?
 - zmienić nazwy na polskie
 - więcej jeśli chodzi o konto dodać, hasło, email itp
 - możliwość zmiany przypisanego zwierzęcia?
+- lokalizacja zdjęcia

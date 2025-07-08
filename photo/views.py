@@ -47,8 +47,8 @@ def upload(request):
                 image_object.prediction_1  = map_animals_pl.setdefault(response['classifications']['classes'][0].strip().split(";")[-1], response['classifications']['classes'][0].strip().split(";")[-1])
                 image_object.prediction_2  = map_animals_pl.setdefault(response['classifications']['classes'][1].strip().split(";")[-1], response['classifications']['classes'][1].strip().split(";")[-1])
                 image_object.prediction_pl = map_animals_pl.setdefault(response['prediction'].strip().split(";")[-1], response['prediction'].strip().split(";")[-1])
-                image_object.prediction_1_probability = response['classifications']['scores'][0]
-                image_object.prediction_2_probability = response['classifications']['scores'][1]
+                image_object.prediction_1_probability = response['classifications']['scores'][0] * 100 # percent
+                image_object.prediction_2_probability = response['classifications']['scores'][1] * 100 # percent
                 image_object.save()
             except Exception as e:
                 photo_path = image_object.image.path

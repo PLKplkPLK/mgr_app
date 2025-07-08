@@ -4,20 +4,29 @@
 <div class="div-whole mb-18">
     <div class="">
         <div class="card-inner">
-            <div class="flex flex-col">
-                <div class="justify-between p-2 flex items-center">
-                    <div class="text-2xl">{% if prediction_1 %} {{ photo.prediction_1 }} {% else %} <p>Wystąpił błąd podczas klasyfikacji.</p> {% endif %}</div>
-                    <div class="text-stone-500 text-sm">{{photo.upload_time}}</div>
+            <div class="bg-white p-4 rounded-md shadow mb-6">
+                <div class="flex flex-col">
+                    <div class="justify-between flex items-center">
+                        <div class="text-2xl">{% if prediction_1 %} {{ photo.prediction_1 }} {% else %} <p>Wystąpił błąd podczas klasyfikacji.</p> {% endif %}</div>
+                        <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
+                    </div>
+                    <img class="my-4 rounded-xs" src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
                 </div>
-                <img class="my-2 rounded-xs" src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
+
+                <div class="">
+                    <p>Rozpoznano na zdjęciu: {{ photo.prediction_1 }}, z prawdopodobieństwem {{ prediction_1_probability|floatformat:1 }}%</p>
+                    {% if photo.prediction_1_probability < 70 %}
+                        <p>Może być to również: {{ photo.prediction_2 }}, prawdopodobieństwo: {{ photo.prediction_2_probability|floatformat:1 }}%</p>
+                    {% endif %}
+                </div>
             </div>
 
             {% if photo.owner == user %}
-            <div class="flex justify-evenly w-full mb-4">
+            <div class="flex justify-evenly w-full">
                 <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
                     {% csrf_token %}
                     <button class='btn-second' type="submit">
-                        {% if photo.is_private %}🔒 Prywatne{% else %}🔓 Publiczne{% endif %}
+                        {% if photo.is_private %}🔒 Upublicznij{% else %}🔓 Prywatne{% endif %}
                     </button>
                 </form>
 
@@ -28,8 +37,8 @@
 
                 <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
                     {% csrf_token %}
-                    <button class='btn-second mb-4' type="submit">
-                        {% if photo.review_status != 1 %}📋 Sprawdź{% else %}✅ Sprawdzone{% endif %}
+                    <button class='btn-second' type="submit">
+                        {% if photo.review_status != 1 %}📋 Sprawdź{% else %}✅ Zakończ{% endif %}
                     </button>
                 </form>
             </div>
@@ -51,7 +60,7 @@
                                 </div>
                                 <div class="chat-header">
                                     <p class="text-sm mr-4">{{ review.owner.username }} {% if review.owner.score > 99 %}👑{% endif %}</p>
-                                    <p class="text-xs opacity-50">{{ review.upload_time }}</p>
+                                    <p class="text-xs opacity-50">{{ review.upload_time|date:"j.n.Y, G:i:s" }}</p>
                                 </div>
                                 <div class="chat-bubble {% if review.helpful %}bg-green-100{% else %}bg-base-300{% endif%}">
                                     {{ review.review }}

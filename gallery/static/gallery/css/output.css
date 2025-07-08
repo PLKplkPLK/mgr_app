@@ -15,8 +15,6 @@
     --color-stone-200: oklch(92.3% 0.003 48.717);
     --color-stone-500: oklch(55.3% 0.013 58.071);
     --spacing: 0.25rem;
-    --container-3xs: 16rem;
-    --container-xs: 20rem;
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
     --text-lg: 1.125rem;
@@ -503,11 +501,11 @@
       font-size: 0.6875rem;
     }
   }
-  .m-auto {
-    margin: auto;
-  }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
+  }
+  .mb-18 {
+    margin-bottom: calc(var(--spacing) * 18);
   }
   .tabs {
     display: flex;
@@ -527,25 +525,13 @@
   .grid {
     display: grid;
   }
-  .size-1\/4 {
-    width: calc(1/4 * 100%);
-    height: calc(1/4 * 100%);
-  }
   .size-\[1\.2em\] {
     width: 1.2em;
     height: 1.2em;
   }
-  .h-1\/4 {
-    height: calc(1/4 * 100%);
-  }
-  .h-1\/10 {
-    height: calc(1/10 * 100%);
-  }
-  .h-1\/14 {
-    height: calc(1/14 * 100%);
-  }
-  .h-1\/20 {
-    height: calc(1/20 * 100%);
+  .size-\[2\.4em\] {
+    width: 2.4em;
+    height: 2.4em;
   }
   .dock-active {
     &:after {
@@ -554,23 +540,8 @@
       color: currentColor;
     }
   }
-  .w-1\/10 {
-    width: calc(1/10 * 100%);
-  }
-  .w-3xs {
-    width: var(--container-3xs);
-  }
-  .w-\[100px\] {
-    width: 100px;
-  }
-  .w-\[150px\] {
-    width: 150px;
-  }
   .w-full {
     width: 100%;
-  }
-  .w-xs {
-    width: var(--container-xs);
   }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
