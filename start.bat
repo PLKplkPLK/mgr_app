@@ -1,0 +1,5 @@
+start cmd /k ".venv\Scripts\python.exe .\manage.py runserver"
+start cmd /k "..\mgr_ml_server\.venv\Scripts\python.exe -m speciesnet.scripts.run_server --port=8008 --extra_fields=country"
+start cmd /k "tailwindcss-windows-x64.exe -i account\static\account\css\input.css -o account\static\account\css\output.css --watch"
+start cmd /k "tailwindcss-windows-x64.exe -i gallery\static\gallery\css\input.css -o gallery\static\gallery\css\output.css --watch"
+start cmd /k "tailwindcss-windows-x64.exe -i photo\static\photo\css\input.css -o photo\static\photo\css\output.css --watch"

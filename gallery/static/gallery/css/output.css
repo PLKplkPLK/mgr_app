@@ -525,10 +525,6 @@
   .grid {
     display: grid;
   }
-  .size-\[1\.2em\] {
-    width: 1.2em;
-    height: 1.2em;
-  }
   .size-\[2\.4em\] {
     width: 2.4em;
     height: 2.4em;
