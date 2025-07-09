@@ -173,7 +173,12 @@ def toggle_helpful(request, review_id:int):
     review = get_object_or_404(Review, id=review_id)
 
     if review.photo.owner == request.user:
-        review.helpful = 0 if review.helpful else 1
+        if review.helpful:
+            review.owner.score -= 1
+        else:
+            review.owner.score += 1
+        review.owner.save()
+        review.helpful = not review.helpful
         review.save()
 
     return redirect(review.photo)
