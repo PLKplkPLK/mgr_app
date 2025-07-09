@@ -780,9 +780,21 @@
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
   }
+  .text-lg {
+    font-size: var(--text-lg);
+    line-height: var(--tw-leading, var(--text-lg--line-height));
+  }
   .text-sm {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+  .tabs-lg {
+    --tab-height: calc(var(--size-field, 0.25rem) * 12);
+    :where(.tab) {
+      font-size: 1.125rem;
+      --tab-p: 1rem;
+      --tab-radius-min: calc(1.5rem - var(--border));
+    }
   }
   .tabs-xl {
     --tab-height: calc(var(--size-field, 0.25rem) * 14);

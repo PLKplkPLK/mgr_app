@@ -3,8 +3,8 @@
 
 {% block content %}
 <div class="browse-container items-top mb-18">
-    <div role="tablist" class="tabs tabs-lift tabs-xl justify-center mb-4">
-        <a role="tab" class="{% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_my' %}">Moje</a>
+    <div role="tablist" class="tabs tabs-lift tabs-lg justify-center mb-4">
+        <a role="tab tab-xl" class="{% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_my' %}">Moje</a>
         <a role="tab" class="{% if request.resolver_match.url_name == 'browse' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse' %}">Społeczność</a>
         <a role="tab" class="{% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
     </div>
@@ -18,7 +18,7 @@
                             <img src="{{ photo.image.url }}" alt="Zdjęcie zwierzątka" />
                         </figure>
                         <div class="justify-between p-4 flex items-center">
-                            <div>{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
+                            <div class="text-lg">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
                             <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                         </div>
                     </div>
