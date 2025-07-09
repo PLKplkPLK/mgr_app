@@ -9,9 +9,9 @@
         <a role="tab" class="{% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {% if photos %}
-            {% for photo in photos %}
+    {% if page_obj %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
+            {% for photo in page_obj %}
                 <a class="text-center text-2xl" href="{% url 'photo:photo_detail' photo.uuid %}">
                     <div class="card bg-base-100 shadow-sm w-full">
                         <figure>
@@ -24,9 +24,22 @@
                     </div>
                 </a>
             {% endfor %}
-        {% else %}
-            <p>Brak zdjęć</p>
-        {% endif %}
-    </div>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <span class="mb-1">Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+            
+            <div class="join flex">
+                {% if page_obj.has_previous %}
+                <a class="join-item btn btn-outline w-24" href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                <a class="join-item btn btn-outline w-24" href="?page={{ page_obj.next_page_number }}">Następna</a>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <p>Brak zdjęć</p>
+    {% endif %}
 </div>
 {% endblock %}

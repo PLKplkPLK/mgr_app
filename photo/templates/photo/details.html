@@ -90,7 +90,7 @@
                                         <span class="text-green-600 mr-2" title="Komentarz oznaczony, jako pomocny">Pomocny</span>
                                     {% endif %}
 
-                                    {% if photo.owner == user %}
+                                    {% if photo.owner == user and user != review.owner %}
                                         <form method="post" action="{% url 'photo:toggle_helpful' review.id %}">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-xs">
