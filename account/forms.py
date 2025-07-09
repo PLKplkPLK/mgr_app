@@ -13,11 +13,11 @@ class StyledUserCreationForm(UserCreationForm):
     )
     password1 = forms.CharField(
         label='Hasło',
-        widget=forms.PasswordInput()
+        widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'})
     )
     password2 = forms.CharField(
         label='Powtórz hasło',
-        widget=forms.PasswordInput()
+        widget=forms.PasswordInput(attrs={'placeholder': 'Powtórz hasło'})
     )
 
 class StyledAuthenticationForm(AuthenticationForm):
@@ -26,7 +26,7 @@ class StyledAuthenticationForm(AuthenticationForm):
         fields = ("username", "password")
 
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Nick'}))
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}))
 
 class AvatarForm(forms.ModelForm):
     class Meta:

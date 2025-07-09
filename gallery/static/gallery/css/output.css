@@ -613,18 +613,6 @@
   .static {
     position: static;
   }
-  .dock-lg {
-    height: 4.5rem;
-    height: calc(4.5rem + env(safe-area-inset-bottom));
-    .dock-active {
-      &:after {
-        bottom: 0.4rem;
-      }
-    }
-    .dock-label {
-      font-size: 0.6875rem;
-    }
-  }
   .join-item {
     &:where(*:not(:first-child, :disabled, [disabled], .btn-disabled)) {
       margin-inline-start: calc(var(--border, 1px) * -1);
@@ -723,9 +711,9 @@
   .grid {
     display: grid;
   }
-  .size-\[2\.4em\] {
-    width: 2.4em;
-    height: 2.4em;
+  .size-\[2\.2em\] {
+    width: 2.2em;
+    height: 2.2em;
   }
   .dock-active {
     &:after {
@@ -737,20 +725,11 @@
   .w-24 {
     width: calc(var(--spacing) * 24);
   }
-  .w-30 {
-    width: calc(var(--spacing) * 30);
-  }
-  .w-70 {
-    width: calc(var(--spacing) * 70);
-  }
   .w-full {
     width: 100%;
   }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-  .grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .flex-col {
     flex-direction: column;
@@ -794,14 +773,6 @@
       font-size: 1.125rem;
       --tab-p: 1rem;
       --tab-radius-min: calc(1.5rem - var(--border));
-    }
-  }
-  .tabs-xl {
-    --tab-height: calc(var(--size-field, 0.25rem) * 14);
-    :where(.tab) {
-      font-size: 1.125rem;
-      --tab-p: 1.25rem;
-      --tab-radius-min: calc(2rem - var(--border));
     }
   }
   .text-stone-500 {

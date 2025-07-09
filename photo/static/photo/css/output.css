@@ -1154,6 +1154,10 @@
     width: var(--size);
     height: var(--size);
   }
+  .size-\[2\.2em\] {
+    width: 2.2em;
+    height: 2.2em;
+  }
   .size-\[2\.4em\] {
     width: 2.4em;
     height: 2.4em;
