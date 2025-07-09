@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 
 import requests
@@ -9,10 +10,24 @@ from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
 
 map_animals_pl = {
-    'red fox': 'Lis',
-    'brown bear': 'Niedźwiedź',
+    'red fox': 'Lis rudy',
+    'brown bear': 'Niedźwiedź brunatny',
     'grey wolf': 'Wilk szary',
     'domestic cat': 'Kot domowy',
+    'common fallow deer': 'Daniel zwyczajny',
+    'blank': 'Brak zwierzęcia',
+    'european roe deer': 'Sarna europejska',
+    'red deer': 'Jeleń szlachetny',
+    'pine marten': 'Kuna leśna',
+    'domestic dog': 'Pies domowy',
+    'martes species': 'Kuna (rodzaj)',
+    'american bison': 'Żubr europejski', # trochę oszustwo
+    'northern raccoon': 'Szop pracz',
+    'eurasian red squirrel': 'Wiewiórka pospolita',
+    'wild boar': 'Dzik euroazjatycki',
+    'moose': 'Łoś euroazjatycki',
+    'european hare': 'Zając szarak',
+    'eurasian badger': 'Borsuk europejski',
 }
 
 @login_required
@@ -194,3 +209,14 @@ def delete_review(request, review_id:int):
         review.delete()
     
     return redirect(review.photo)
+
+@require_POST
+@login_required
+def rename_photo(request, uuid):
+    photo = get_object_or_404(Photo, uuid=uuid)
+
+    new_name = request.POST.get('custom_name')
+    if new_name and photo.owner == request.user:
+        photo.custom_name = new_name
+        photo.save()
+    return redirect(photo)

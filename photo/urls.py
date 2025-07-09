@@ -10,6 +10,7 @@ urlpatterns = [
     path('<uuid:uuid>/toggle_review/', views.toggle_review, name='toggle_review'),
     path('<uuid:uuid>/post_review/', views.post_review, name='post_review'),
     path('<uuid:uuid>/delete', views.delete_photo, name="delete_photo"),
+    path('<uuid:uuid>/rename', views.rename_photo, name="rename_photo"),
     path('<int:review_id>/helpful/', views.toggle_helpful, name='toggle_helpful'),
     path('<int:review_id>/delete/', views.delete_review, name='delete_review'),
     path('<uuid:uuid>/', views.photo_detail, name="photo_detail")

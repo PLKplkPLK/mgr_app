@@ -8,22 +8,25 @@
             <div class="bg-white p-4 rounded-md shadow mb-6">
                 <div class="flex flex-col">
                     <div class="justify-between flex items-center">
-                        <div class="text-2xl">{% if prediction_1 %} {{ photo.prediction_1 }} {% else %} <p>Wystąpił błąd podczas klasyfikacji.</p> {% endif %}</div>
+                        <div class="text-2xl">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
                         <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                     </div>
                     <img class="my-4 rounded-xs" src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
                 </div>
 
                 <div class="">
+                    {% if photo.custom_name %}<p>Nazwa została zmieniona przez użytkownika.</p><br>{% endif %}
+                    <p>Przewidywania modelu:</p>
                     <p>Rozpoznano na zdjęciu: {{ photo.prediction_1 }}, z prawdopodobieństwem {{ prediction_1_probability|floatformat:1 }}%</p>
                     {% if photo.prediction_1_probability < 70 %}
                         <p>Może być to również: {{ photo.prediction_2 }}, prawdopodobieństwo: {{ photo.prediction_2_probability|floatformat:1 }}%</p>
                     {% endif %}
+                    <p>Gatunek zawężony do Polski: {{ photo.prediction_pl }}</p>
                 </div>
             </div>
 
             {% if photo.owner == user %}
-            <div class="flex justify-evenly w-full">
+            <div class="flex justify-center w-full space-x-8 mb-4">
                 <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
                     {% csrf_token %}
                     <button class='btn-second' type="submit">
@@ -43,8 +46,23 @@
                     </button>
                 </form>
             </div>
+            
+            <div class="box-content w-content">
+                <div role="tablist" class="tabs-xl tabs-lift flex justify-center">
+                    <button id="toggle_form_button" class="btn-second m-auto" onclick="toggle_rename_form()">Zmień przypisanie</button>
+                </div>
+                
+                <div id="rename_form" class="hidden bg-white border-stone-100 border-1 rounded-md p-2">
+                    <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
+                        {% csrf_token %}
+                        <input class="input" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
+                        <button type="submit" class="btn">Zapisz</button>
+                    </form>
+                </div>
+            </div>
+            
             {% endif %}
-
+            
             <div class="divider"></div>
 
             {% if photo.review_status == 0 %}
@@ -119,4 +137,21 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggle_rename_form() {
+    var form = document.getElementById('rename_form');
+    var button = document.getElementById('toggle_form_button');
+
+    if (form.style.display=='block') {
+        form.style.display='none';
+        button.innerHTML = 'Zmień przypisanie'
+        button.className = 'btn-second'
+    } else {
+        form.style.display='block';
+        button.innerHTML = 'Nie zmieniaj'
+        button.className = 'tab tab-active text-xl'
+    }
+}
+</script>
 {% endblock %}

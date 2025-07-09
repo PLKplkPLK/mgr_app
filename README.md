@@ -8,9 +8,8 @@ python manage.py [command]\
 commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 #### TODO
-- zmienić input textarea na text, cały ten do wysyłania komentarzy
-- zmienić nazwy na polskie
+- dodać ładowanie więcej obrazków albo strony
 - przystosować do mobile
 - więcej jeśli chodzi o konto dodać, hasło, email itp
-- możliwość zmiany przypisanego zwierzęcia?
+- zmienić nazwy na polskie
 - lokalizacja zdjęcia

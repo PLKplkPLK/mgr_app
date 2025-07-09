@@ -15,12 +15,10 @@
                 <a class="text-center text-2xl" href="{% url 'photo:photo_detail' photo.uuid %}">
                     <div class="card bg-base-100 shadow-sm w-full">
                         <figure>
-                            <img
-                            src="{{ photo.image.url }}"
-                            alt="Zdjęcie zwierzątka" />
+                            <img src="{{ photo.image.url }}" alt="Zdjęcie zwierzątka" />
                         </figure>
                         <div class="justify-between p-4 flex items-center">
-                            <div>{{ photo.prediction_1 }}</div>
+                            <div>{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
                             <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                         </div>
                     </div>

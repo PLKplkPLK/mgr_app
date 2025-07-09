@@ -1,6 +1,8 @@
 from django import forms
 from PIL import Image
 
+from .models import Photo
+
 MAX_FILE_SIZE = 1e7
 
 class SendPhotoForm(forms.Form):
