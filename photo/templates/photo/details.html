@@ -1,7 +1,8 @@
 {% extends 'photo/base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
-<div class="div-whole mb-18">
+<div class="div-whole mb-22">
     <div class="">
         <div class="card-inner">
             <div class="bg-white p-4 rounded-md shadow mb-6">
@@ -98,18 +99,19 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-                        
+
                     {% if photo.review_status == 1 %}
-                        <form class="mb-4 w-3/5 h-1/6" method="post" action="{% url 'photo:post_review' photo.uuid %}">
+                        <legend class="fieldset-legend text-sm">Pomóż w weryfikacji zwierzaka</legend>
+                        <form class="flex justify-between" method="post" action="{% url 'photo:post_review' photo.uuid %}">
                             {% csrf_token %}
-                            <fieldset class="fieldset">
-                                <legend class="fieldset-legend">Pomóż w weryfikacji zwierzaka</legend>
-                                {{ post_review_form }}
+                            <fieldset class="fieldset w-full mr-4">
+                                {{ post_review_form.review|add_class:"input" }}
                             </fieldset>
-                            
-                            <div class="flex justify-end mt-2">
-                                <button class="btn-main" type="submit">Dodaj</button>
-                            </div>
+                            <button class="btn btn-circle bg-stone-300 m-auto" type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                </svg>
+                            </button>
                         </form>
                     {% endif %}
                 </div>

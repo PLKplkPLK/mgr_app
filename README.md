@@ -8,7 +8,6 @@ python manage.py [command]\
 commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 #### TODO
-- score ile użytkownik ma oznaczonych komentarzy, jako pomocne. Wtedy, gdy ktoś ma więcej niż 100? ma złote komentarze, czy coś
 - zmienić input textarea na text, cały ten do wysyłania komentarzy
 - zmienić nazwy na polskie
 - przystosować do mobile
