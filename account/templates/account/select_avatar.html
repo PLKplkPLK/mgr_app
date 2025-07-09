@@ -1,0 +1,18 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+<div class="p-12 mb-18">
+    <form method="post" class="space-y-4 flex flex-col items-center">
+    {% csrf_token %}
+    <div class="grid grid-cols-3 gap-6">
+        {% for avatar in avatar_choices %}
+        <label class="cursor-pointer">
+            <input type="radio" name="avatar" value="{{ avatar }}" class="hidden peer" {% if avatar == current_avatar %}checked{% endif %}>
+            <img src="{{ avatar }}" class="rounded-full peer-checked:border-4 border-lime-700 transition">
+        </label>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn-main">Save Avatar</button>
+    </form>
+</div>
+{% endblock %}

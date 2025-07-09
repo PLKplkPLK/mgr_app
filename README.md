@@ -8,11 +8,10 @@ python manage.py [command]\
 commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 #### TODO
-- wybieranie koloru/avatara użytkownika - emoji?
 - score ile użytkownik ma oznaczonych komentarzy, jako pomocne. Wtedy, gdy ktoś ma więcej niż 100? ma złote komentarze, czy coś
 - zmienić input textarea na text, cały ten do wysyłania komentarzy
-- w detalach podać więcej informacji dot. klasyfikacji
 - zmienić nazwy na polskie
+- przystosować do mobile
 - więcej jeśli chodzi o konto dodać, hasło, email itp
 - możliwość zmiany przypisanego zwierzęcia?
 - lokalizacja zdjęcia

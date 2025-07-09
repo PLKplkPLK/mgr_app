@@ -9,5 +9,6 @@ urlpatterns = [
     path('signout/', views.signout, name='signout'),
     path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
-    path('settings/', views.settings, name='settings')
+    path('settings/', views.settings_page, name='settings'),
+    path('change.avatar/', views.select_avatar, name='select_avatar'),
 ]

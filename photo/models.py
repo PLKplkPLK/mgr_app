@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 import uuid
@@ -12,7 +12,7 @@ class Photo(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     upload_time = models.DateTimeField(auto_now_add=True, null=True)
     is_private = models.BooleanField(default=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
     image = models.ImageField(upload_to = upload_to_uuid, null=True)
     prediction_1 = models.TextField(null=True)
     prediction_1_probability = models.FloatField(null=True)
@@ -29,7 +29,7 @@ class Photo(models.Model):
 
 class Review(models.Model):
     upload_time = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
     review = models.TextField()
     helpful = models.BooleanField(default=0)

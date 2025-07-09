@@ -56,7 +56,7 @@
                         {% for review in reviews %}
                             <div class="chat chat-start pb-4">
                                 <div class="chat-image avatar">
-                                    <div class="w-11 rounded-full bg-stone-300">{{ review.owner.avatar }}</div>
+                                    <div class="w-11 rounded-full"><img src="{{ review.owner.avatar }}" alt="awatar"/></div>
                                 </div>
                                 <div class="chat-header">
                                     <p class="text-sm mr-4">{{ review.owner.username }} {% if review.owner.score > 99 %}👑{% endif %}</p>

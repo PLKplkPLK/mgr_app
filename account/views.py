@@ -1,23 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django import forms
+from django.conf import settings
 
-class StyledUserCreationForm(UserCreationForm):
-    username = forms.CharField(
-        label='Nazwa użytkownika',
-        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nick'})
-    )
-    password1 = forms.CharField(
-        label='Hasło',
-        widget=forms.PasswordInput(attrs={'class': 'input'})
-    )
-    password2 = forms.CharField(
-        label='Powtórz hasło',
-        widget=forms.PasswordInput(attrs={'class': 'input'})
-    )
+import os
+
+from .forms import StyledAuthenticationForm, StyledUserCreationForm
 
 def signup(request):
     """
@@ -36,10 +24,6 @@ def signup(request):
         form = StyledUserCreationForm()
     
     return render(request, 'account/sign_up.html', {'form': form})
-
-class StyledAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nick'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input'}))
 
 def signin(request):
     """
@@ -60,7 +44,7 @@ def signin(request):
     return render(request, 'account/login.html', {'form': form})
 
 @login_required
-def settings(request):
+def settings_page(request):
     """
     Render a settings page
     """
@@ -73,3 +57,20 @@ def signout(request):
     """
     logout(request)
     return redirect('account:signin')
+
+@login_required
+def select_avatar(request):
+    avatars_dir = os.path.join(settings.MEDIA_ROOT, 'avatars')
+    avatar_choices = [f'/media/avatars/{filename}' for filename in os.listdir(avatars_dir)]
+
+    if request.method == 'POST':
+        selected_avatar = request.POST.get('avatar')
+        if selected_avatar in avatar_choices:
+            request.user.avatar = selected_avatar
+            request.user.save()
+            return redirect('/account/settings')
+    
+    return render(request, 'account/select_avatar.html', {
+        'avatar_choices': avatar_choices,
+        'current_avatar': request.user.avatar
+    })
