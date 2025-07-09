@@ -7,11 +7,11 @@ class SendPhotoForm(forms.Form):
     image_file = forms.ImageField(
         label="",
         required=True,
-        widget=forms.ClearableFileInput(attrs={'class': 'file-input file-input-lg'})
+        widget=forms.ClearableFileInput()
     )
     is_private = forms.BooleanField(
         required=False,
-        widget=forms.CheckboxInput(attrs={'class': 'checkbox checkbox-lg'})
+        widget=forms.CheckboxInput()
     )
 
     def clean_image_file(self):
@@ -34,6 +34,6 @@ class SendPhotoForm(forms.Form):
 
 class PostReviewForm(forms.Form):
     review = forms.CharField(
-        widget=forms.TextInput(attrs={'rows': 2, 'class': "input w-full", 'placeholder': 'Komentarz'}),
+        widget=forms.TextInput(attrs={'rows': 2, 'placeholder': 'Komentarz'}),
         label=""
     )

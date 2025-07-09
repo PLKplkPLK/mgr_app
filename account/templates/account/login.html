@@ -1,5 +1,6 @@
 {% extends 'account/base_not_logged.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
 <div class="flex flex-col text-center space-y-6 mb-16">
@@ -12,12 +13,12 @@
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Nazwa użytkownika</legend>
             {{ form.username.errors }}
-            {{ form.username }}
+            {{ form.username|add_class:"input" }}
         </fieldset>
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Hasło</legend>
             {{ form.password.errors }}
-            {{ form.password }}
+            {{ form.password|add_class:"input" }}
         </fieldset>
         <button class="btn-main mt-4" type="submit">Zaloguj</button>
     </form>

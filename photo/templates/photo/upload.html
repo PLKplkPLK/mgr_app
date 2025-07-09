@@ -1,5 +1,6 @@
 {% extends 'photo/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
 <div class="div-whole">
@@ -22,7 +23,7 @@
                 </div>
             {% elif error %}
                 <div id="error2" class="bg-rose-100 alert alert-error mb-4 block text-center w-fit">
-                    <p class="text-error text-rose-900">{{error}}</p>
+                    <p class="text-error text-rose-900">{{ error }}</p>
                 </div>
             {% endif %}
 
@@ -30,12 +31,12 @@
                 {% csrf_token %}
                 <div class="form-control space-y-4 flex flex-col items-center">
                     <fieldset class="fieldset">
-                        {{ form.image_file }}
-                        <label class="label">Maksymalnie 10MB</label>
+                        {{ form.image_file|add_class:"file-input file-input-lg m-auto" }}
+                        <label class="label ml-10">Maksymalnie 10MB</label>
                     </fieldset>
                     <fieldset class="fieldset bg-stone-50 border-base-300 rounded-box w-fit border p-2">
                         <label class="label text-lg">
-                            {{ form.is_private }}
+                            {{ form.is_private|add_class:"checkbox checkbox-md" }}
                             Prywatne
                         </label>
                     </fieldset>

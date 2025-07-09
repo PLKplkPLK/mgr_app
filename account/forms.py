@@ -9,15 +9,15 @@ class StyledUserCreationForm(UserCreationForm):
 
     username = forms.CharField(
         label='Nazwa użytkownika',
-        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nick'})
+        widget=forms.TextInput(attrs={'placeholder': 'Nick'})
     )
     password1 = forms.CharField(
         label='Hasło',
-        widget=forms.PasswordInput(attrs={'class': 'input'})
+        widget=forms.PasswordInput()
     )
     password2 = forms.CharField(
         label='Powtórz hasło',
-        widget=forms.PasswordInput(attrs={'class': 'input'})
+        widget=forms.PasswordInput()
     )
 
 class StyledAuthenticationForm(AuthenticationForm):
@@ -25,8 +25,8 @@ class StyledAuthenticationForm(AuthenticationForm):
         model = get_user_model()
         fields = ("username", "password")
 
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nick'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Nick'}))
+    password = forms.CharField(widget=forms.PasswordInput())
 
 class AvatarForm(forms.ModelForm):
     class Meta:
