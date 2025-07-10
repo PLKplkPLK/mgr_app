@@ -1,5 +1,6 @@
 {% extends 'gallery/base.html' %}
 {% load static %}
+{% load thumbnail %}
 
 {% block content %}
 <div class="browse-container items-top mb-18">
@@ -15,7 +16,9 @@
                 <a class="text-center text-2xl" href="{% url 'photo:photo_detail' photo.uuid %}">
                     <div class="card bg-base-100 shadow-sm w-full">
                         <figure>
-                            <img src="{{ photo.image.url }}" alt="Zdjęcie zwierzątka" />
+                            {% thumbnail photo.image "500x282" crop="center" quality=85 as im %}
+                                <img src="{{ im.url }}" loading="lazy" alt="Zdjęcie zwierzątka" />
+                            {% endthumbnail %}
                         </figure>
                         <div class="justify-between p-4 flex items-center">
                             <div class="text-lg">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>

@@ -1,7 +1,8 @@
 @import "tailwindcss" source(none);
-@plugin "./daisyui.js";
+@plugin "./daisyui.js" {
+  themes: light --default;
+}
 @source "../../../templates/photo";
-@source "../../../templates";
 
 @layer components {
   .btn-main {

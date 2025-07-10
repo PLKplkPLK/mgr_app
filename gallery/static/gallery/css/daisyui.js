@@ -85,7 +85,7 @@ var pluginOptionsHandler = (() => {
     const {
       logs = true,
       root = ":root",
-      themes = ["light --default", "dark --prefersdark", "corporate"], // theme change
+      themes = ["light --default", "dark --prefersdark"], // theme change
       include,
       exclude,
       prefix = ""

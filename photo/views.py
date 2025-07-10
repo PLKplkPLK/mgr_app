@@ -2,9 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
+from django.core.files.base import ContentFile
 
 import requests
 import os
+from PIL import Image
+from io import BytesIO
 
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
@@ -30,6 +33,17 @@ map_animals_pl = {
     'eurasian badger': 'Borsuk europejski',
 }
 
+def convert_image_to_webp(uploaded_file):
+    img = Image.open(uploaded_file)
+    img = img.convert("RGB")  # Ensures compatibility (e.g. for PNGs with alpha)
+
+    buffer = BytesIO()
+    img.save(buffer, format='WEBP', quality=85)
+
+    webp_filename = f"{os.path.splitext(uploaded_file.name)[0]}.webp"
+
+    return ContentFile(buffer.getvalue(), name=webp_filename)
+
 @login_required
 def upload(request):
     """
@@ -38,10 +52,13 @@ def upload(request):
     if request.method == "POST":
         form = SendPhotoForm(request.POST, request.FILES)
         if form.is_valid():
+            # convert to webp
+            image_webp = convert_image_to_webp(form.cleaned_data['image_file'])
+
             # save image (disk and database)
             image_object = Photo.objects.create(
                 is_private = form.cleaned_data['is_private'],
-                image = form.cleaned_data['image_file'],
+                image = image_webp,
                 owner = request.user
             )
 
