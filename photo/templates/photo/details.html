@@ -7,15 +7,28 @@
         <div class="card-inner">
             <div class="bg-white p-4 rounded-md shadow mb-6">
                 <div class="flex flex-col">
+                    <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Twoje zdjęcie">
                     <div class="justify-between flex items-center">
-                        <div class="text-2xl">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
+                        <div class="text-2xl mt-2 mb-4">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
                         <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                     </div>
-                    <img class="my-4 rounded-xs" src="{{ photo.image.url }}" id="image" alt="Twoje zdjęcie">
                 </div>
 
+                <!-- Modal -->
+                <dialog id="zoomModal" class="modal">
+                    <div class="modal-box max-w-full rounded-sm">
+                        <form method="dialog">
+                            <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                        <img id="zoomedImage" class="w-full h-auto rounded-xs" />
+                    </div>
+                    <form method="dialog" class="modal-backdrop">
+                        <button>Close</button>
+                    </form>
+                </dialog>
+
                 <div class="">
-                    {% if photo.custom_name %}<p>Nazwa została zmieniona przez użytkownika.</p><br>{% endif %}
+                    {% if photo.custom_name %}<p>Nazwa została zmieniona przez użytkownika.</p>{% endif %}
                     <p>Przewidywania modelu:</p>
                     <p>Rozpoznano na zdjęciu: {{ photo.prediction_1 }}, z prawdopodobieństwem {{ prediction_1_probability|floatformat:1 }}%</p>
                     {% if photo.prediction_1_probability < 70 %}
@@ -46,20 +59,26 @@
                     </button>
                 </form>
             </div>
-            
-            <div class="box-content w-content">
-                <div role="tablist" class="tabs-xl tabs-lift flex justify-center">
-                    <button id="toggle_form_button" class="btn-second m-auto" onclick="toggle_rename_form()">Zmień przypisanie</button>
-                </div>
-                
-                <div id="rename_form" class="hidden bg-white border-stone-100 border-1 rounded-md p-2">
-                    <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
-                        {% csrf_token %}
-                        <input class="input" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
-                        <button type="submit" class="btn">Zapisz</button>
+
+            <button id="toggle_form_button" class="btn-second m-auto" onclick="rename_modal.showModal()">Zmień przypisanie</button>
+            <dialog id="rename_modal" class="modal">
+                <div class="modal-box flex flex-col items-center">
+                    <form method="dialog">
+                        <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
+                    <h3 class="text-lg font-bold">Zmień nazwę</h3>
+                    <div class="modal-action">
+                        <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
+                            {% csrf_token %}
+                            <input class="input mr-4" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
+                            <button type="submit" class="btn">Zapisz</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
             
             {% endif %}
             
@@ -139,19 +158,10 @@
 </div>
 
 <script>
-function toggle_rename_form() {
-    var form = document.getElementById('rename_form');
-    var button = document.getElementById('toggle_form_button');
-
-    if (form.style.display=='block') {
-        form.style.display='none';
-        button.innerHTML = 'Zmień przypisanie'
-        button.className = 'btn-second'
-    } else {
-        form.style.display='block';
-        button.innerHTML = 'Nie zmieniaj'
-        button.className = 'tab tab-active text-xl'
-    }
-}
+  function showModal(src) {
+    document.getElementById('zoomedImage').src = src;
+    document.getElementById('zoomModal').showModal();
+  }
 </script>
+
 {% endblock %}

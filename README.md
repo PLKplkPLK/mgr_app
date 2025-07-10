@@ -8,8 +8,7 @@ python manage.py [command]\
 commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 #### TODO
-- zmienić jakoś obrazki może na webp, przede wszystkim, żeby miniaturki się ładowały w galerii, nie całe
-- powiększyć, po kliknięciu na zdjęcie
 - więcej jeśli chodzi o konto dodać, hasło, email itp
-- zmienić nazwy na polskie
 - lokalizacja zdjęcia
+- zmienić nazwy na polskie
+- powiększyć, po kliknięciu na zdjęcie - niby jest, ale nie wiem, czy w ten sposób jest ok.
