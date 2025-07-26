@@ -1,0 +1,16 @@
+{% extends 'account/base_not_logged.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="flex flex-col items-center text-center space-y-6 mb-16">
+    <img class="w-[200px] m-auto flex items-center mb-4" src={% static 'logo_blank.png' %} />
+    <h2 class="text-2xl">Potwierdzenie</h2>
+
+    <p style="mb-4">Przejdź na skrzynkę pocztową, aby potwierdzić email</p>
+
+    <p>Nie otrzymałeś emaila? zaloguj się ponownie, a zostanie wysłany kolejny.</p>
+
+    <a class="btn-second" href="{% url 'account:signin' %}">Powrót</a>
+</div>
+{% endblock %}

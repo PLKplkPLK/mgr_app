@@ -952,6 +952,7 @@
       --btn-fg: var(--color-primary-content);
       isolation: isolate;
     }
+    width: fit-content;
     background-color: var(--color-stone-50);
     color: var(--color-lime-800);
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
@@ -1088,6 +1089,7 @@
       --btn-fg: var(--color-primary-content);
       isolation: isolate;
     }
+    width: fit-content;
     background-color: var(--color-stone-200);
     color: var(--color-lime-700);
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));

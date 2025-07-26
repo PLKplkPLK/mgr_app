@@ -12,6 +12,7 @@ urlpatterns = [
     path('settings/', views.settings_page, name='settings'),
     path('change.avatar/', views.select_avatar, name='select_avatar'),
     path('send_correction/', views.send_correction, name='send_correction'),
+    path('activate/<uidb64>/<token>', views.activate_email, name='activate'),
 
     path('password_reset/',
         auth_views.PasswordResetView.as_view(
