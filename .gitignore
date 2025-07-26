@@ -1,4 +1,8 @@
 .venv
+
 **/__pycache__/
-/media/photos
 **/tailwindcss-windows-x64.exe
+db.sqlite3
+
+/media/photos
+/media/cache
