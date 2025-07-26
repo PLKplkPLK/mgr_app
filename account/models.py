@@ -4,6 +4,7 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
     avatar = models.CharField(max_length=50, null=True, default='/media/avatars/wrobel.png')
     score = models.PositiveIntegerField(default=0)
 

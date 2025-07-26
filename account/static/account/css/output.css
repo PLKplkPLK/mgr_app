@@ -9,6 +9,7 @@
     monospace;
     --color-lime-700: oklch(53.2% 0.157 131.589);
     --color-lime-800: oklch(45.3% 0.124 130.933);
+    --color-lime-900: oklch(40.5% 0.101 131.063);
     --color-slate-50: oklch(98.4% 0.003 247.858);
     --color-stone-50: oklch(98.5% 0.001 106.423);
     --color-stone-100: oklch(97% 0.001 106.424);
@@ -754,6 +755,22 @@
   .max-w-full {
     max-width: 100%;
   }
+  .link {
+    cursor: pointer;
+    text-decoration-line: underline;
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+      @media (forced-colors: active) {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
   .cursor-pointer {
     cursor: pointer;
   }
@@ -819,6 +836,9 @@
   }
   .text-lime-800 {
     color: var(--color-lime-800);
+  }
+  .text-lime-900 {
+    color: var(--color-lime-900);
   }
   .text-neutral-content {
     color: var(--color-neutral-content);

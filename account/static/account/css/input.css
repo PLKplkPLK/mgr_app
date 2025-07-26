@@ -6,10 +6,10 @@
 
 @layer components {
   .btn-main {
-    @apply btn btn-xl text-lime-800 bg-stone-50 shadow hover:bg-stone-200;
+    @apply btn btn-xl text-lime-800 bg-stone-50 shadow hover:bg-stone-200 w-fit;
   }
   .btn-second {
-    @apply btn btn-lg text-lime-700 bg-stone-200 shadow;
+    @apply btn btn-lg text-lime-700 bg-stone-200 shadow w-fit;
   }
   .body-main {
     @apply bg-slate-50 min-h-screen flex items-center justify-center p-4;

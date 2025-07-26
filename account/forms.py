@@ -5,11 +5,15 @@ from django import forms
 class StyledUserCreationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = ("username", "password1", "password2")
+        fields = ("username", "email", "password1", "password2")
 
     username = forms.CharField(
         label='Nazwa użytkownika',
         widget=forms.TextInput(attrs={'placeholder': 'Nick'})
+    )
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={'placeholder': 'user@mail.com'})
     )
     password1 = forms.CharField(
         label='Hasło',

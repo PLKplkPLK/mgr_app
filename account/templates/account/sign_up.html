@@ -18,6 +18,12 @@
         </fieldset>
 
         <fieldset class="fieldset">
+            {{ form.email.label_tag }}
+            {{ form.email.errors }}
+            {{ form.email|add_class:"input" }}
+        </fieldset>
+
+        <fieldset class="fieldset">
             {{ form.password1.label_tag }}
             {{ form.password1.errors }}
             {{ form.password1|add_class:"input" }}

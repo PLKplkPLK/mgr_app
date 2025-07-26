@@ -135,3 +135,8 @@ AUTH_USER_MODEL = 'account.CustomUser'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DATA_UPLOAD_MAX_MEMORY_SIZE = int(1e7)
+
+
+# Auth email etc.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'account@zwierzatka.com'
