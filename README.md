@@ -11,4 +11,6 @@ commands: runserver, startapp [app], (makemigrations [app], check, migrate), tes
 - więcej jeśli chodzi o konto dodać, hasło, email itp
 - lokalizacja zdjęcia
 - zmienić nazwy na polskie
-- powiększyć, po kliknięciu na zdjęcie - niby jest, ale nie wiem, czy w ten sposób jest ok.
+- zmienić bazę danych na postgres
+- zmienić dane admina
+- dodać zakładkę z tymi podpowiedziami jak rozpoznawać zwierzę

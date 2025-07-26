@@ -21,6 +21,27 @@
 
     <div class="flex flex-col space-y-6">
         <a class="btn-main" href="{% url 'account:select_avatar' %}">Zmień awatar</a>
+        
+        <a class="btn-main" onclick="report_modal.showModal()">Zgłoś poprawkę</a>
+        <dialog id="report_modal" class="modal">
+            <div class="modal-box flex flex-col items-center">
+                    <form method="dialog">
+                        <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    <h3 class="text-lg font-bold">Zgłoś poprawkę</h3>
+                    <div class="modal-action">
+                        <form class="flex" method="post" action="{% url 'account:send_correction' %}">
+                            {% csrf_token %}
+                            <input class="input mr-4 w-70" type="text" name="message" maxlength="400" required>
+                            <button type="submit" class="btn">Wyślij</button>
+                        </form>
+                    </div>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
+
         <a class="btn-main" href="{% url 'account:signout' %}">Wyloguj się</a>
     </div>
 </div>

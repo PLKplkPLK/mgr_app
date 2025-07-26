@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.conf import settings
 
 import os
 
 from .forms import StyledAuthenticationForm, StyledUserCreationForm
+from .models import Correction
 
 def signup(request):
     """
@@ -60,6 +62,9 @@ def signout(request):
 
 @login_required
 def select_avatar(request):
+    """
+    Render avatar selection or change avatar
+    """
     avatars_dir = os.path.join(settings.MEDIA_ROOT, 'avatars')
     avatar_choices = [f'/media/avatars/{filename}' for filename in os.listdir(avatars_dir)]
 
@@ -74,3 +79,22 @@ def select_avatar(request):
         'avatar_choices': avatar_choices,
         'current_avatar': request.user.avatar
     })
+
+@require_POST
+@login_required
+def send_correction(request):
+    """
+    Send user's correction proposal
+    """
+    message = request.POST.get('message')
+    
+    if len(message) < 401:
+        correction = Correction(
+            user=request.user,
+            message=request.POST.get('message')
+        )
+        
+        if correction.message:
+            correction.save()
+
+    return redirect('/account/settings')

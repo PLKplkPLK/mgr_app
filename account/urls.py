@@ -11,4 +11,5 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('settings/', views.settings_page, name='settings'),
     path('change.avatar/', views.select_avatar, name='select_avatar'),
+    path('send_correction/', views.send_correction, name='send_correction')
 ]
