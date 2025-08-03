@@ -8,9 +8,8 @@ python manage.py [command]\
 commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 #### TODO
-- potwierdzenie mail'a
 - lokalizacja zdjęcia
+- dodać zakładkę z tymi podpowiedziami jak rozpoznawać zwierzę
 - zmienić nazwy na polskie
 - zmienić bazę danych na postgres
 - zmienić dane admina
-- dodać zakładkę z tymi podpowiedziami jak rozpoznawać zwierzę

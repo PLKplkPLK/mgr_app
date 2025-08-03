@@ -12,6 +12,7 @@ from io import BytesIO
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
 
+
 map_animals_pl = {
     'red fox': 'Lis rudy',
     'brown bear': 'Niedźwiedź brunatny',
@@ -33,6 +34,7 @@ map_animals_pl = {
     'eurasian badger': 'Borsuk europejski',
 }
 
+
 def convert_image_to_webp(uploaded_file):
     img = Image.open(uploaded_file)
     img = img.convert("RGB")  # Ensures compatibility (e.g. for PNGs with alpha)
@@ -43,6 +45,7 @@ def convert_image_to_webp(uploaded_file):
     webp_filename = f"{os.path.splitext(uploaded_file.name)[0]}.webp"
 
     return ContentFile(buffer.getvalue(), name=webp_filename)
+
 
 @login_required
 def upload(request):
@@ -94,6 +97,7 @@ def upload(request):
         form = SendPhotoForm()
     return render(request, "photo/upload.html", {"form": form})
 
+
 @login_required
 def photo_detail(request, uuid):
     """
@@ -126,6 +130,7 @@ def photo_detail(request, uuid):
         "reviews": reviews
     })
 
+
 @login_required
 def delete_photo(request, uuid):
     """
@@ -143,6 +148,7 @@ def delete_photo(request, uuid):
 
     return redirect('gallery:browse_my')
 
+
 @login_required
 def toggle_photo_privacy(request, uuid):
     """
@@ -156,6 +162,7 @@ def toggle_photo_privacy(request, uuid):
         return redirect(photo)
     
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
+
 
 @login_required
 def toggle_review(request, uuid):
@@ -179,6 +186,7 @@ def toggle_review(request, uuid):
     
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
 
+
 @login_required
 def post_review(request, uuid):
     """
@@ -196,6 +204,7 @@ def post_review(request, uuid):
         review_object.save()
 
     return redirect(photo)
+
 
 @login_required
 def toggle_helpful(request, review_id:int):
@@ -215,6 +224,7 @@ def toggle_helpful(request, review_id:int):
 
     return redirect(review.photo)
 
+
 @login_required
 def delete_review(request, review_id:int):
     """
@@ -227,6 +237,7 @@ def delete_review(request, review_id:int):
     
     return redirect(review.photo)
 
+
 @require_POST
 @login_required
 def rename_photo(request, uuid):
@@ -236,4 +247,15 @@ def rename_photo(request, uuid):
     if new_name and photo.owner == request.user:
         photo.custom_name = new_name
         photo.save()
+
+    return redirect(photo)
+
+
+@require_POST
+@login_required
+def set_location(request, uuid):
+    photo = get_object_or_404(Photo, uuid=uuid)
+
+    # to do
+
     return redirect(photo)

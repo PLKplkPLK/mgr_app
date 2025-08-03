@@ -7,7 +7,7 @@
         <div class="card-inner">
             <div class="bg-white p-4 rounded-md shadow mb-6">
                 <div class="flex flex-col">
-                    <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Twoje zdjęcie">
+                    <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka" onerror="Błąd: nie znaleziono zdjęcia :(">
                     <div class="justify-between flex items-center">
                         <div class="text-2xl mt-2 mb-4">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
                         <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
@@ -60,7 +60,7 @@
                 </form>
             </div>
 
-            <button id="toggle_form_button" class="btn-second m-auto" onclick="rename_modal.showModal()">Zmień przypisanie</button>
+            <button id="toggle_form_button" class="btn-second m-auto mb-4" onclick="rename_modal.showModal()">Zmień przypisanie</button>
             <dialog id="rename_modal" class="modal">
                 <div class="modal-box flex flex-col items-center">
                     <form method="dialog">
@@ -79,8 +79,35 @@
                     <button>close</button>
                 </form>
             </dialog>
-            
             {% endif %}
+
+            <button id="toggle_form_button" class="btn-second m-auto" onclick="location_modal.showModal()">🌍 Lokalizacja</button>
+            <dialog id="location_modal" class="modal">
+                <div class="modal-box flex flex-col items-center">
+                    <form method="dialog">
+                        <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    {% if photo.owner == user %}
+                        <h3 class="text-lg font-bold">Ustaw lokalizację</h3>
+                    {% else %}
+                        <h3 class="text-lg font-bold">Lokalizacja</h3>
+                    {% endif %}
+                    <div class="modal-action">
+                        {% if photo.owner == user %}
+                            <form class="text-center" method="post" action="{% url 'photo:set_location' photo.uuid %}">
+                                {% csrf_token %}
+                                MAPA
+                                <button type="submit" class="btn">Zapisz</button>
+                            </form>
+                        {% else %}
+                            MAPA
+                        {% endif %}
+                    </div>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
             
             <div class="divider"></div>
 
