@@ -10,7 +10,7 @@ def browse(request):
     """
     View for browsing images of other users
     """
-    photos = Photo.objects.filter(is_private=False)
+    photos = Photo.objects.filter(is_private=False).order_by('-upload_time')
     paginator = Paginator(photos, 10)
 
     page_number = request.GET.get("page")
@@ -25,7 +25,7 @@ def browse_my(request):
     """
     View for browsing photos of the user
     """
-    photos = Photo.objects.filter(owner=request.user.id)
+    photos = Photo.objects.filter(owner=request.user.id).order_by('-upload_time')
     paginator = Paginator(photos, 10)
 
     page_number = request.GET.get("page")

@@ -11,6 +11,7 @@ from io import BytesIO
 
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
+from .helpers import add_noise_to_localization
 
 
 map_animals_pl = {
@@ -254,8 +255,16 @@ def rename_photo(request, uuid):
 @require_POST
 @login_required
 def set_location(request, uuid):
-    photo = get_object_or_404(Photo, uuid=uuid)
+    if request.method == 'POST':
+        photo = get_object_or_404(Photo, uuid=uuid)
+        lat = float(request.POST.get('localization_lat'))
+        lng = float(request.POST.get('localization_lng'))
 
-    # to do
+        if photo.owner == request.user and lat and lng:
+            noisy_lat, noisy_lng = add_noise_to_localization(latitude=lat, longitude=lng)
+            photo.localization_latitude=noisy_lat
+            photo.localization_longitude=noisy_lng
+            photo.save()
+        return redirect(photo)
 
-    return redirect(photo)
+    return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)

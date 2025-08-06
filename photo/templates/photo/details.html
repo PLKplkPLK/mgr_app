@@ -29,8 +29,8 @@
 
                 <div class="">
                     {% if photo.custom_name %}<p>Nazwa została zmieniona przez użytkownika.</p>{% endif %}
-                    <p>Przewidywania modelu:</p>
-                    <p>Rozpoznano na zdjęciu: {{ photo.prediction_1 }}, z prawdopodobieństwem {{ prediction_1_probability|floatformat:1 }}%</p>
+                        <p>Przewidywania modelu:</p>
+                        <p>Rozpoznano na zdjęciu: {{ photo.prediction_1 }}, z prawdopodobieństwem {{ prediction_1_probability|floatformat:1 }}%</p>
                     {% if photo.prediction_1_probability < 70 %}
                         <p>Może być to również: {{ photo.prediction_2 }}, prawdopodobieństwo: {{ photo.prediction_2_probability|floatformat:1 }}%</p>
                     {% endif %}
@@ -39,75 +39,81 @@
             </div>
 
             {% if photo.owner == user %}
-            <div class="flex justify-center w-full space-x-8 mb-4">
-                <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
-                    {% csrf_token %}
-                    <button class='btn-second' type="submit">
-                        {% if photo.is_private %}🔒 Upublicznij{% else %}🔓 Prywatne{% endif %}
-                    </button>
-                </form>
-
-                <form method="post" action="{% url 'photo:delete_photo' photo.uuid %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć zdjęcie?');">
-                    {% csrf_token %}
-                    <button class='btn-second' type="submit">🗑️</button>
-                </form>
-
-                <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
-                    {% csrf_token %}
-                    <button class='btn-second' type="submit">
-                        {% if photo.review_status != 1 %}📋 Sprawdź{% else %}✅ Zakończ{% endif %}
-                    </button>
-                </form>
-            </div>
-
-            <button id="toggle_form_button" class="btn-second m-auto mb-4" onclick="rename_modal.showModal()">Zmień przypisanie</button>
-            <dialog id="rename_modal" class="modal">
-                <div class="modal-box flex flex-col items-center">
-                    <form method="dialog">
-                        <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                <div class="flex justify-center w-full space-x-8 mb-4">
+                    <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
+                        {% csrf_token %}
+                        <button class='btn-second' type="submit">
+                            {% if photo.is_private %}🔒 Upublicznij{% else %}🔓 Prywatne{% endif %}
+                        </button>
                     </form>
-                    <h3 class="text-lg font-bold">Zmień nazwę</h3>
-                    <div class="modal-action">
-                        <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
-                            {% csrf_token %}
-                            <input class="input mr-4" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
-                            <button type="submit" class="btn">Zapisz</button>
-                        </form>
-                    </div>
+
+                    <form method="post" action="{% url 'photo:delete_photo' photo.uuid %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć zdjęcie?');">
+                        {% csrf_token %}
+                        <button class='btn-second' type="submit">🗑️</button>
+                    </form>
+
+                    <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
+                        {% csrf_token %}
+                        <button class='btn-second' type="submit">
+                            {% if photo.review_status != 1 %}📋 Sprawdź{% else %}✅ Zakończ{% endif %}
+                        </button>
+                    </form>
                 </div>
-                <form method="dialog" class="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog>
-            {% endif %}
 
-            <button id="toggle_form_button" class="btn-second m-auto" onclick="location_modal.showModal()">🌍 Lokalizacja</button>
-            <dialog id="location_modal" class="modal">
-                <div class="modal-box flex flex-col items-center">
-                    <form method="dialog">
-                        <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                    </form>
-                    {% if photo.owner == user %}
-                        <h3 class="text-lg font-bold">Ustaw lokalizację</h3>
-                    {% else %}
-                        <h3 class="text-lg font-bold">Lokalizacja</h3>
-                    {% endif %}
-                    <div class="modal-action">
-                        {% if photo.owner == user %}
-                            <form class="text-center" method="post" action="{% url 'photo:set_location' photo.uuid %}">
+                <button id="toggle_form_button" class="btn-second m-auto mb-4" onclick="rename_modal.showModal()">Zmień przypisanie</button>
+                <dialog id="rename_modal" class="modal">
+                    <div class="modal-box flex flex-col items-center">
+                        <form method="dialog">
+                            <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                        <h3 class="text-lg font-bold">Zmień nazwę</h3>
+                        <div class="modal-action">
+                            <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
                                 {% csrf_token %}
-                                MAPA
+                                <input class="input mr-4" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
                                 <button type="submit" class="btn">Zapisz</button>
                             </form>
-                        {% else %}
-                            MAPA
-                        {% endif %}
+                        </div>
                     </div>
-                </div>
-                <form method="dialog" class="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog>
+                    <form method="dialog" class="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
+            {% endif %}
+
+            {% if photo.localization_latitude and photo.localization_longitude or photo.owner == user %}
+                <button id="toggle_form_button" class="btn-second m-auto" onclick="location_modal.showModal()">🌍 Lokalizacja</button>
+                <dialog id="location_modal" class="modal">
+                    <div class="modal-box max-w-full flex flex-col items-center">
+                        <form method="dialog">
+                            <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                        {% if photo.owner == user %}
+                            <h3 class="text-lg font-bold">Ustaw lokalizację</h3>
+                        {% else %}
+                            <h3 class="text-lg font-bold">Lokalizacja</h3>
+                        {% endif %}
+                        <div class="modal-action flex flex-col items-center w-full">
+                            {% if photo.owner == user %}
+                                Lokalizacja będzie się różniła od ustawionej, aby chronić zwierzę.
+                                <div id="map"></div>
+                                <form class="text-center" method="post" action="{% url 'photo:set_location' photo.uuid %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="id_lat" name="localization_lat">
+                                    <input type="hidden" id="id_lng" name="localization_lng">
+                                    <button type="submit" class="btn">Zapisz</button>
+                                </form>
+                            {% else %}
+                                Lokalizacja różni się od prawdziwej, aby chronić zwierzę.
+                                <div id="map"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <form method="dialog" class="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
+            {% endif %}
             
             <div class="divider"></div>
 
@@ -185,10 +191,57 @@
 </div>
 
 <script>
-  function showModal(src) {
-    document.getElementById('zoomedImage').src = src;
-    document.getElementById('zoomModal').showModal();
-  }
+    function showModal(src) {
+        document.getElementById('zoomedImage').src = src;
+        document.getElementById('zoomModal').showModal();
+    }
+</script>
+
+
+<style>
+    #map {
+        height: 400px;
+        width: 100%;
+        border-radius: 10px;
+    }
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([52.237, 21.017], 6); // Center on Poland
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // render existing marker
+    var marker_prev;
+    {% if photo.localization_latitude and photo.localization_longitude %}
+    marker_prev = L.marker([{{ photo.localization_latitude }}, {{ photo.localization_longitude }}]).addTo(map).bindPopup('{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}');
+    {% endif %}
+
+    {% if photo.owner == user %}
+    // On map click, set marker and update hidden inputs
+    var marker;
+    function onMapClick(e) {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        if (marker_prev) {
+            map.removeLayer(marker_prev);
+        }
+
+        marker = L.marker(e.latlng).addTo(map);
+        document.getElementById("id_lat").value = e.latlng.lat;
+        document.getElementById("id_lng").value = e.latlng.lng;
+    }
+
+    map.on('click', onMapClick);
+    {% endif %}
 </script>
 
 {% endblock %}

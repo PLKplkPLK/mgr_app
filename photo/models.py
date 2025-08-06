@@ -21,6 +21,8 @@ class Photo(models.Model):
     prediction_pl = models.TextField(null=True)
     review_status = models.PositiveSmallIntegerField(default=0)
     custom_name = models.TextField(null=True)
+    localization_latitude = models.FloatField(null=True)
+    localization_longitude = models.FloatField(null=True)
 
     def __str__(self):
         return 'Photo of id: ' + str(self.id)

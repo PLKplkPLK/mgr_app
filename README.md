@@ -8,7 +8,7 @@ python manage.py [command]\
 commands: runserver, startapp [app], (makemigrations [app], check, migrate), test [app]
 
 #### TODO
-- lokalizacja zdjęcia
+- zmienić na dropdown?
 - dodać zakładkę z tymi podpowiedziami jak rozpoznawać zwierzę
 - zmienić nazwy na polskie
 - zmienić bazę danych na postgres
