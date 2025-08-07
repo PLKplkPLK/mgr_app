@@ -1060,9 +1060,6 @@
   .w-11 {
     width: calc(var(--spacing) * 11);
   }
-  .w-80 {
-    width: calc(var(--spacing) * 80);
-  }
   .w-\[150px\] {
     width: 150px;
   }
@@ -1071,9 +1068,6 @@
   }
   .w-full {
     width: 100%;
-  }
-  .max-w-80 {
-    max-width: calc(var(--spacing) * 80);
   }
   .max-w-full {
     max-width: 100%;

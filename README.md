@@ -9,7 +9,7 @@ commands: runserver, startapp [app], (makemigrations [app], check, migrate), tes
 
 #### TODO
 - zmienić na dropdown?
-- dodać zakładkę z tymi podpowiedziami jak rozpoznawać zwierzę
 - zmienić nazwy na polskie
+- dodać zakładkę z tymi podpowiedziami jak rozpoznawać zwierzę
 - zmienić bazę danych na postgres
 - zmienić dane admina
