@@ -6,3 +6,7 @@ db.sqlite3
 
 /media/photos
 /media/cache
+/srv
+/static
+
+/mgr/settings.py

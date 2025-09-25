@@ -1,3 +1,7 @@
 django
 django-widget-tweaks
 sorl-thumbnail
+psycopg[binary]
+
+requests
+pillow

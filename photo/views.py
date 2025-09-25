@@ -68,11 +68,11 @@ def upload(request):
 
             # The classification is done on a separate server via API
             try:
-                url = "http://localhost:8008/predict"
+                url = "http://localhost:8006/predict"
                 data = {
                     "instances": [
                         {
-                            "filepath": "http://127.0.0.1:8000" + image_object.image.url,
+                            "filepath": "http://127.0.0.1" + image_object.image.url,
                             "country": "POL"
                         }
                     ]
