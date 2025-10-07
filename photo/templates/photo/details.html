@@ -170,7 +170,7 @@
                         {% endfor %}
                     {% endif %}
 
-                    {% if photo.review_status == 1 %}
+                    {% if photo.review_status == 1 and user.is_authenticated %}
                         <legend class="fieldset-legend text-sm">Pomóż w weryfikacji zwierzaka</legend>
                         <form class="flex justify-between" method="post" action="{% url 'photo:post_review' photo.uuid %}">
                             {% csrf_token %}
@@ -183,6 +183,8 @@
                                 </svg>
                             </button>
                         </form>
+                    {% else %}
+                        <legend class="fieldset-legend text-sm">Aby pomóc w weryfikacji zwierzaka, zaloguj się.</legend>
                     {% endif %}
                 </div>
             {% endif %}

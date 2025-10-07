@@ -11,7 +11,11 @@
     <div class="">
         <div class="card-inner">
             <h2 class="card-title text-xl mb-6">Wyślij zdjęcie do rozpoznania</h2>
-
+            {% if not user.is_authenticated %}
+                <div>
+                    <h4 class="text-xl mb-6">Abyś mógł później łatwo znaleźć swoje zdjęcia, zaloguj się.</h2>
+                </div>
+            {% endif %}
             {% if form.errors %}
                 <div id="error1" class="bg-rose-100 alert alert-error mb-4 block text-center">
                     <p class="text-lg">Wystąpił błąd w formularzu :(</p>
@@ -34,7 +38,7 @@
                         {{ form.image_file|add_class:"file-input file-input-lg m-auto" }}
                         <label class="label ml-10">Maksymalnie 10MB</label>
                     </fieldset>
-                    <fieldset class="fieldset bg-stone-50 border-base-300 rounded-box w-fit border p-2">
+                    <fieldset class="fieldset bg-stone-50 border-base-300 rounded-box w-fit border p-2{% if not user.is_authenticated %} hidden{%endif%}">
                         <label class="label text-lg">
                             {{ form.is_private|add_class:"checkbox checkbox-md" }}
                             Prywatne
@@ -48,6 +52,7 @@
                 <p style="text-aling:center">Próbuję rozpoznać zwierzaka</p>
                 <span class="loading loading-ring loading-xl"></span>
             </div>
+
         </div>
     </div>
 </div>

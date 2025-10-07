@@ -48,23 +48,22 @@ def convert_image_to_webp(uploaded_file):
     return ContentFile(buffer.getvalue(), name=webp_filename)
 
 
-@login_required
 def upload(request):
     """
-    A site to upload and classify a photo
+    A site to upload and classify a photo.
     """
     if request.method == "POST":
         form = SendPhotoForm(request.POST, request.FILES)
         if form.is_valid():
             # convert to webp
             image_webp = convert_image_to_webp(form.cleaned_data['image_file'])
-
             # save image (disk and database)
             image_object = Photo.objects.create(
                 is_private = form.cleaned_data['is_private'],
                 image = image_webp,
-                owner = request.user
+                owner = request.user if request.user.is_authenticated else None
             )
+            print(request.user)
 
             # The classification is done on a separate server via API
             try:
@@ -99,7 +98,6 @@ def upload(request):
     return render(request, "photo/upload.html", {"form": form})
 
 
-@login_required
 def photo_detail(request, uuid):
     """
     Site to display details of a photo

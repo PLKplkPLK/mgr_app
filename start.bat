@@ -1,5 +1,5 @@
-start cmd /k "title django & .venv\Scripts\python.exe .\manage.py runserver 0.0.0.0:8000"
-start cmd /k "title ml & ..\mgr_ml_server\.venv\Scripts\python.exe -m speciesnet.scripts.run_server --port=8008 --extra_fields=country"
+start cmd /k "title django & .venv\Scripts\python.exe .\manage.py runserver 0.0.0.0:80"
+start cmd /k "title ml & ..\mgr_ml_server\.venv\Scripts\python.exe -m speciesnet.scripts.run_server --port=8006 --extra_fields=country"
 start cmd /k "title daisy account & tailwindcss-windows-x64.exe -i account\static\account\css\input.css -o account\static\account\css\output.css --watch"
 start cmd /k "title daisy gallery & tailwindcss-windows-x64.exe -i gallery\static\gallery\css\input.css -o gallery\static\gallery\css\output.css --watch"
 start cmd /k "title daisy photo & tailwindcss-windows-x64.exe -i photo\static\photo\css\input.css -o photo\static\photo\css\output.css --watch"

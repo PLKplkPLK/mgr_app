@@ -871,6 +871,9 @@
   .m-auto {
     margin: auto;
   }
+  .my-6 {
+    margin-block: calc(var(--spacing) * 6);
+  }
   .label {
     display: inline-flex;
     align-items: center;
