@@ -255,8 +255,14 @@ def rename_photo(request, uuid):
 def set_location(request, uuid):
     if request.method == 'POST':
         photo = get_object_or_404(Photo, uuid=uuid)
-        lat = float(request.POST.get('localization_lat'))
-        lng = float(request.POST.get('localization_lng'))
+        lat = request.POST.get('localization_lat')
+        lng = request.POST.get('localization_lng')
+
+        if not lat or not lng:
+            return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
+
+        lat = float(lat)
+        lng = float(lng)
 
         if photo.owner == request.user and lat and lng:
             noisy_lat, noisy_lng = add_noise_to_localization(latitude=lat, longitude=lng)
