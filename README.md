@@ -9,7 +9,6 @@ commands: runserver, startapp [app], (makemigrations [app], check, migrate), tes
 
 #### TODO
 - zmienić na dropdown?
+- dodać ocenianie wiarygodności klasyfikacji + pytajniki, jeżeli jest mała
 - zmienić nazwy na polskie
 - dodać zakładkę z tymi podpowiedziami jak rozpoznawać zwierzę
-- zmienić bazę danych na postgres
-- zmienić dane admina
