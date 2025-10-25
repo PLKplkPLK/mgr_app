@@ -183,7 +183,7 @@
                                 </svg>
                             </button>
                         </form>
-                    {% else %}
+                    {% elif photo.review_status == 1 %}
                         <legend class="fieldset-legend text-sm">Aby pomóc w weryfikacji zwierzaka, zaloguj się.</legend>
                     {% endif %}
                 </div>
@@ -223,7 +223,7 @@
     // render existing marker
     var marker_prev;
     {% if photo.localization_latitude and photo.localization_longitude %}
-    marker_prev = L.marker([{{ photo.localization_latitude }}, {{ photo.localization_longitude }}]).addTo(map).bindPopup('{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}');
+    marker_prev = L.marker([{{ photo.localization_latitude | floatformat }}, {{ photo.localization_longitude | floatformat }}]).addTo(map).bindPopup('{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}');
     {% endif %}
 
     {% if photo.owner == user %}

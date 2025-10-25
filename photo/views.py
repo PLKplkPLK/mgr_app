@@ -1,18 +1,21 @@
+import logging
+import os
+from io import BytesIO
+
+import requests
+from PIL import Image
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from django.core.files.base import ContentFile
 
-import requests
-import os
-from PIL import Image
-from io import BytesIO
-
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
 from .helpers import add_noise_to_localization
 
+
+logger = logging.getLogger(__name__)
 
 map_animals_pl = {
     'red fox': 'Lis rudy',
@@ -71,7 +74,7 @@ def upload(request):
                 data = {
                     "instances": [
                         {
-                            "filepath": "http://127.0.0.1" + image_object.image.url,
+                            "filepath": "https://rozpoznawanie-zwierzat.tele.agh.edu.pl" + image_object.image.url,
                             "country": "POL"
                         }
                     ]
@@ -90,7 +93,8 @@ def upload(request):
                 if os.path.exists(photo_path):
                     os.remove(photo_path)
                 image_object.delete()
-                return render(request, "photo/upload.html", {"form": form, "error": "Nie można połączyć się z serwerem"})
+                logger.exception(f"Image upload error: {repr(e)}")
+                return render(request, "photo/upload.html", {"form": form, "error": f"Nie można połączyć się z serwerem."})
 
             return redirect(image_object)
     else:
@@ -255,8 +259,14 @@ def rename_photo(request, uuid):
 def set_location(request, uuid):
     if request.method == 'POST':
         photo = get_object_or_404(Photo, uuid=uuid)
-        lat = float(request.POST.get('localization_lat'))
-        lng = float(request.POST.get('localization_lng'))
+        lat = request.POST.get('localization_lat')
+        lng = request.POST.get('localization_lng')
+
+        if not lat or not lng:
+            return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
+
+        lat = float(lat)
+        lng = float(lng)
 
         if photo.owner == request.user and lat and lng:
             noisy_lat, noisy_lng = add_noise_to_localization(latitude=lat, longitude=lng)
