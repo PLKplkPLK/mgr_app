@@ -62,12 +62,7 @@ def upload(request):
         if form.is_valid():
             # convert to webp
             image_webp = convert_image_to_webp(form.cleaned_data['image_file'])
-            # save image (disk and database)
-            image_object = Photo.objects.create(
-                is_private = form.cleaned_data['is_private'],
-                image = image_webp,
-                owner = request.user if request.user.is_authenticated else None
-            )
+            image_object = None
 
             # The classification is done on a separate server via API
             try:
@@ -78,10 +73,18 @@ def upload(request):
 
                 # the request
                 response = requests.post(url, files=files, timeout=30)
+                print(response.status_code)
                 if not response.ok:
                     raise Exception(f"Error, status: {response.status_code}")
                 response = response.json()
 
+                image_object = Photo.objects.create(
+                    is_private = form.cleaned_data['is_private'],
+                    image = image_webp,
+                    owner = request.user if request.user.is_authenticated else None,
+                    prediction = '',
+                    prediction_confidence=0
+                )
                 if response.get('category') != 1:
                     image_object.prediction = 'empty'
                 else:
@@ -93,12 +96,15 @@ def upload(request):
                     image_object.bbox = json.dumps(bbox)
                 image_object.save()
             except Exception as e:
-                photo_path = image_object.image.path
-                if os.path.exists(photo_path):
-                    os.remove(photo_path)
-                image_object.delete()
+                photo_path = None
+                if image_object:
+                    photo_path = image_object.image.path
+                    image_object.delete()
+                if photo_path:
+                    if os.path.exists(photo_path):
+                        os.remove(photo_path)
                 logger.exception(f"Image upload error: {repr(e)}")
-                if repr(e):
+                if "Error, status:" in repr(e):
                     return render(request, "photo/upload.html", {"form": form, "error": repr(e)})
                 return render(request, "photo/upload.html", {"form": form, "error": f"Nie można połączyć się z serwerem."})
 
@@ -116,14 +122,16 @@ def photo_detail(request, uuid):
     post_review_form = PostReviewForm()
     reviews = Review.objects.filter(photo=photo)
 
-    if photo.prediction:
-        return render(request, "photo/details.html", {
-            "photo": photo,
-            "prediction": photo.prediction,
-            "prediction_probability": photo.prediction_confidence,
-            "post_review_form": post_review_form,
-            "reviews": reviews
-        })
+    # wtf?
+    # if photo.prediction:
+    #     return render(request, "photo/details.html", {
+    #         "photo": photo,
+    #         "prediction": photo.prediction,
+    #         "prediction_probability": photo.prediction_confidence * 100,
+    #         "post_review_form": post_review_form,
+    #         "reviews": reviews
+    #     })
+    photo.prediction_confidence = photo.prediction_confidence * 100
 
     return render(request, "photo/details.html", {
         "photo": photo,

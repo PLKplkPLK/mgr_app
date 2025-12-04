@@ -9,7 +9,7 @@
                 <div class="flex flex-col">
                     <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka" onerror="Błąd: nie znaleziono zdjęcia :(">
                     <div class="justify-between flex items-center">
-                        <div class="text-2xl mt-2 mb-4">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}</div>
+                        <div class="text-2xl mt-2 mb-4">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
                         <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                     </div>
                 </div>
@@ -28,13 +28,8 @@
                 </dialog>
 
                 <div class="">
-                    {% if photo.custom_name %}<p>Nazwa została zmieniona przez użytkownika.</p>{% endif %}
-                        <p>Przewidywania modelu:</p>
-                        <p>Rozpoznano na zdjęciu: {{ photo.prediction_1 }}, z prawdopodobieństwem {{ prediction_1_probability|floatformat:1 }}%</p>
-                    {% if photo.prediction_1_probability < 70 %}
-                        <p>Może być to również: {{ photo.prediction_2 }}, prawdopodobieństwo: {{ photo.prediction_2_probability|floatformat:1 }}%</p>
-                    {% endif %}
-                    <p>Gatunek zawężony do Polski: {{ photo.prediction_pl }}</p>
+                    <p>Przewidywania modelu:</p>
+                    <p>Rozpoznano na zdjęciu: {{ photo.prediction }}, z prawdopodobieństwem {{ photo.prediction_confidence |floatformat:1 }}%</p>
                 </div>
             </div>
 
