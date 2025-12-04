@@ -19,30 +19,31 @@ from .helpers import add_noise_to_localization
 logger = logging.getLogger(__name__)
 
 map_animals_pl = {  # Frontend side
-    'red fox': 'Lis rudy',
-    'brown bear': 'Niedźwiedź brunatny',
-    'grey wolf': 'Wilk szary',
+    'fox': 'Lis rudy',
+    'bear': 'Niedźwiedź brunatny',
+    'wolf': 'Wilk szary',
     'domestic cat': 'Kot domowy',
-    'common fallow deer': 'Daniel zwyczajny',
-    'blank': 'Brak zwierzęcia',
-    'european roe deer': 'Sarna europejska',
+    'fallow deer': 'Daniel zwyczajny',
+    'empty': 'Brak zwierzęcia',
+    'roe deer': 'Sarna europejska',
     'red deer': 'Jeleń szlachetny',
     'pine marten': 'Kuna leśna',
     'domestic dog': 'Pies domowy',
     'martes species': 'Kuna (rodzaj)',
-    'american bison': 'Żubr europejski',
-    'northern raccoon': 'Szop pracz',
-    'eurasian red squirrel': 'Wiewiórka pospolita',
+    'bison': 'Żubr europejski',
+    'raccoon': 'Szop pracz',
+    'squirrel': 'Wiewiórka pospolita',
     'wild boar': 'Dzik euroazjatycki',
     'moose': 'Łoś euroazjatycki',
-    'european hare': 'Zając szarak',
-    'eurasian badger': 'Borsuk europejski',
+    'hare': 'Zając szarak',
+    'badger': 'Borsuk europejski',
 }
 
 
 def convert_image_to_webp(uploaded_file) -> ContentFile:
     img = Image.open(uploaded_file)
     img = img.convert("RGB")  # Ensures compatibility (e.g. for PNGs with alpha)
+    img.thumbnail((2000, 2000))
 
     buffer = BytesIO()
     img.save(buffer, format='WEBP', quality=85)
@@ -115,19 +116,11 @@ def photo_detail(request, uuid):
     post_review_form = PostReviewForm()
     reviews = Review.objects.filter(photo=photo)
 
-    if photo.prediction_1:
-        prediction_1 = photo.prediction_1.split(';')[-1]
-        prediction_2 = photo.prediction_2.split(';')[-1] if photo.prediction_2  else ''
-        prediction_pl = photo.prediction_pl.split(';')[-1] if photo.prediction_pl else ''
-        prediction_1_probability = photo.prediction_1_probability
-        prediction_2_probability = photo.prediction_2_probability
+    if photo.prediction:
         return render(request, "photo/details.html", {
             "photo": photo,
-            "prediction_1": prediction_1,
-            "prediction_2": prediction_2,
-            "prediction_pl": prediction_pl,
-            "prediction_1_probability": prediction_1_probability,
-            "prediction_2_probability": prediction_2_probability,
+            "prediction": photo.prediction,
+            "prediction_probability": photo.prediction_confidence,
             "post_review_form": post_review_form,
             "reviews": reviews
         })
