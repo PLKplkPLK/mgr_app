@@ -1,4 +1,5 @@
 .venv
+venv
 
 **/__pycache__/
 **/tailwindcss-windows-x64.exe

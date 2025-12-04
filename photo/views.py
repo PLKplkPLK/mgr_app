@@ -17,7 +17,7 @@ from .helpers import add_noise_to_localization
 
 logger = logging.getLogger(__name__)
 
-map_animals_pl = {
+map_animals_pl = {  # Frontend side
     'red fox': 'Lis rudy',
     'brown bear': 'Niedźwiedź brunatny',
     'grey wolf': 'Wilk szary',
@@ -29,7 +29,7 @@ map_animals_pl = {
     'pine marten': 'Kuna leśna',
     'domestic dog': 'Pies domowy',
     'martes species': 'Kuna (rodzaj)',
-    'american bison': 'Żubr europejski', # trochę oszustwo
+    'american bison': 'Żubr europejski',
     'northern raccoon': 'Szop pracz',
     'eurasian red squirrel': 'Wiewiórka pospolita',
     'wild boar': 'Dzik euroazjatycki',
@@ -39,7 +39,7 @@ map_animals_pl = {
 }
 
 
-def convert_image_to_webp(uploaded_file):
+def convert_image_to_webp(uploaded_file) -> ContentFile:
     img = Image.open(uploaded_file)
     img = img.convert("RGB")  # Ensures compatibility (e.g. for PNGs with alpha)
 
@@ -66,27 +66,29 @@ def upload(request):
                 image = image_webp,
                 owner = request.user if request.user.is_authenticated else None
             )
-            print(request.user)
 
             # The classification is done on a separate server via API
             try:
                 url = "http://localhost:8006/predict"
-                data = {
-                    "instances": [
-                        {
-                            "filepath": "https://rozpoznawanie-zwierzat.tele.agh.edu.pl" + image_object.image.url,
-                            "country": "POL"
-                        }
-                    ]
-                }
-                response = requests.post(url, json=data).json()
-                response = response['predictions'][0]
 
-                image_object.prediction_1  = map_animals_pl.setdefault(response['classifications']['classes'][0].strip().split(";")[-1], response['classifications']['classes'][0].strip().split(";")[-1])
-                image_object.prediction_2  = map_animals_pl.setdefault(response['classifications']['classes'][1].strip().split(";")[-1], response['classifications']['classes'][1].strip().split(";")[-1])
-                image_object.prediction_pl = map_animals_pl.setdefault(response['prediction'].strip().split(";")[-1], response['prediction'].strip().split(";")[-1])
-                image_object.prediction_1_probability = response['classifications']['scores'][0] * 100 # percent
-                image_object.prediction_2_probability = response['classifications']['scores'][1] * 100 # percent
+                image_webp.seek(0)
+                files = {"image": (image_webp.name, image_webp.read(), "image/webp")}
+
+                # the request
+                response = requests.post(url, files=files, timeout=30)
+                if not response.ok:
+                    raise Exception(f"Error, status: {response.status_code}")
+                response = response.json()
+
+                if response.get('category') != 1:
+                    image_object.prediction = 'empty'
+                else:
+                    detected_animal = response.get('detected_animal')
+                    bbox = response.get('bbox')
+                    confidence = response.get('confidence')
+                    image_object.prediction  = detected_animal
+                    image_object.prediction_probability = confidence
+                    image_object.bbox = bbox
                 image_object.save()
             except Exception as e:
                 photo_path = image_object.image.path
@@ -94,6 +96,8 @@ def upload(request):
                     os.remove(photo_path)
                 image_object.delete()
                 logger.exception(f"Image upload error: {repr(e)}")
+                if repr(e):
+                    return render(request, "photo/upload.html", {"form": form, "error": repr(e)})
                 return render(request, "photo/upload.html", {"form": form, "error": f"Nie można połączyć się z serwerem."})
 
             return redirect(image_object)
@@ -112,8 +116,8 @@ def photo_detail(request, uuid):
 
     if photo.prediction_1:
         prediction_1 = photo.prediction_1.split(';')[-1]
-        prediction_2 = photo.prediction_2.split(';')[-1]
-        prediction_pl = photo.prediction_pl.split(';')[-1]
+        prediction_2 = photo.prediction_2.split(';')[-1] if photo.prediction_2  else ''
+        prediction_pl = photo.prediction_pl.split(';')[-1] if photo.prediction_pl else ''
         prediction_1_probability = photo.prediction_1_probability
         prediction_2_probability = photo.prediction_2_probability
         return render(request, "photo/details.html", {
