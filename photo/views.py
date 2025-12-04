@@ -1,5 +1,6 @@
 import logging
 import os
+import json
 from io import BytesIO
 
 import requests
@@ -87,8 +88,8 @@ def upload(request):
                     bbox = response.get('bbox')
                     confidence = response.get('confidence')
                     image_object.prediction  = detected_animal
-                    image_object.prediction_probability = confidence
-                    image_object.bbox = bbox
+                    image_object.prediction_confidence = confidence
+                    image_object.bbox = json.dumps(bbox)
                 image_object.save()
             except Exception as e:
                 photo_path = image_object.image.path

@@ -14,18 +14,16 @@ class Photo(models.Model):
     is_private = models.BooleanField(default=True)
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
     image = models.ImageField(upload_to = upload_to_uuid, null=True)
-    prediction_1 = models.TextField(null=True)
-    prediction_1_probability = models.FloatField(null=True)
-    prediction_2 = models.TextField(null=True)
-    prediction_2_probability = models.FloatField(null=True)
-    prediction_pl = models.TextField(null=True)
+    prediction = models.TextField()
+    prediction_confidence = models.FloatField()
+    bbox = models.TextField(null=True)
     review_status = models.PositiveSmallIntegerField(default=0)
     custom_name = models.TextField(null=True)
     localization_latitude = models.FloatField(null=True)
     localization_longitude = models.FloatField(null=True)
 
     def __str__(self):
-        return 'Photo of id: ' + str(self.id)
+        return 'Photo of id: ' + str(self.uuid)
 
     def get_absolute_url(self):
         return reverse("photo:photo_detail", kwargs={"uuid": self.uuid})
@@ -35,4 +33,4 @@ class Review(models.Model):
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
     review = models.TextField()
-    helpful = models.BooleanField(default=0)
+    helpful = models.BooleanField(default=False)
