@@ -8,7 +8,7 @@ from PIL import Image
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.core.files.base import ContentFile
 
 from .models import Photo, Review
@@ -119,18 +119,13 @@ def photo_detail(request, uuid):
     Site to display details of a photo
     """
     photo = get_object_or_404(Photo, uuid=uuid)
+
+    if photo.is_private and photo.owner != request.user:
+        return HttpResponse('Unauthorized', status=401)
+
     post_review_form = PostReviewForm()
     reviews = Review.objects.filter(photo=photo)
 
-    # wtf?
-    # if photo.prediction:
-    #     return render(request, "photo/details.html", {
-    #         "photo": photo,
-    #         "prediction": photo.prediction,
-    #         "prediction_probability": photo.prediction_confidence * 100,
-    #         "post_review_form": post_review_form,
-    #         "reviews": reviews
-    #     })
     photo.prediction_confidence = photo.prediction_confidence * 100
 
     return render(request, "photo/details.html", {
