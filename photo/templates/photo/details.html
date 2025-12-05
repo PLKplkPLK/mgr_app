@@ -38,9 +38,7 @@
                 <div class="flex flex-col">
                     <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
                     <div class="justify-between flex items-center">
-                        <div class="text-2xl mt-2 mb-4">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}
-                            <button id="toggle_form_button" class="btn-second m-auto" onclick="rename_modal.showModal()">✏️</button>
-                        </div>
+                        <button id="toggle_form_button" class="btn-second" onclick="rename_modal.showModal()">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %} ✏️</button>
                         <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                     </div>
                 </div>
