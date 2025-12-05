@@ -2,14 +2,45 @@
 {% load widget_tweaks %}
 
 {% block content %}
+{% if photo.owner == user or user.score > 99 %}
+    <style>
+        @keyframes swing {
+            0% { transform: rotate(0deg); }
+            40% { transform: rotate(0deg); }
+            50% { transform: rotate(-10deg); }
+            60% { transform: rotate(5deg); }
+            70% { transform: rotate(-3deg); }
+            80% { transform: rotate(2deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .rotate-anim {
+            display: inline-block;
+            animation: swing 1.5s infinite ease-in-out;
+        }
+    </style>
+{% endif %}
+
 <div class="div-whole mb-22">
     <div class="">
         <div class="card-inner">
             <div class="bg-white p-4 rounded-md shadow mb-6">
+                {% if photo.owner == user or user.score > 99 %}
+                    <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
+                        {% csrf_token %}
+                        <button type="submit" style="border: none; background: transparent; padding: 0;">
+                            <img style="width: 20%; height: 20%" class="rotate-anim" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
+                        </button>
+                    </form>
+                {% else %}
+                    <img style="width: 20%; height: 20%" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
+                {% endif %}
                 <div class="flex flex-col">
-                    <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka" onerror="Błąd: nie znaleziono zdjęcia :(">
+                    <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
                     <div class="justify-between flex items-center">
-                        <div class="text-2xl mt-2 mb-4">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
+                        <div class="text-2xl mt-2 mb-4">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}
+                            <button id="toggle_form_button" class="btn-second m-auto" onclick="rename_modal.showModal()">✏️</button>
+                        </div>
                         <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                     </div>
                 </div>
@@ -33,28 +64,24 @@
             </div>
 
             {% if photo.owner == user %}
-                <div class="flex justify-center w-full space-x-8 mb-4">
-                    <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
-                        {% csrf_token %}
-                        <button class='btn-second' type="submit">
-                            {% if photo.is_private %}🔒 Upublicznij{% else %}🔓 Prywatne{% endif %}
-                        </button>
-                    </form>
-
+                <div class="flex justify-center space-x-8 mb-4">
                     <form method="post" action="{% url 'photo:delete_photo' photo.uuid %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć zdjęcie?');">
                         {% csrf_token %}
                         <button class='btn-second' type="submit">🗑️</button>
                     </form>
 
-                    <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
+                    <form>
+                        <button id="toggle_form_button" class="btn-second m-auto" onclick="location_modal.showModal()">🌍</button>
+                    </form>
+
+                    <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
                         {% csrf_token %}
                         <button class='btn-second' type="submit">
-                            {% if photo.review_status != 1 %}📋 Sprawdź{% else %}✅ Zakończ{% endif %}
+                            {% if photo.is_private %}🔐{% else %}🔓{% endif %}
                         </button>
                     </form>
                 </div>
 
-                <button id="toggle_form_button" class="btn-second m-auto mb-4" onclick="rename_modal.showModal()">Zmień przypisanie</button>
                 <dialog id="rename_modal" class="modal">
                     <div class="modal-box flex flex-col items-center">
                         <form method="dialog">
@@ -73,10 +100,7 @@
                         <button>close</button>
                     </form>
                 </dialog>
-            {% endif %}
 
-            {% if photo.localization_latitude and photo.localization_longitude or photo.owner == user %}
-                <button id="toggle_form_button" class="btn-second m-auto" onclick="location_modal.showModal()">🌍 Lokalizacja</button>
                 <dialog id="location_modal" class="modal">
                     <div class="modal-box max-w-full flex flex-col items-center">
                         <form method="dialog">
@@ -111,10 +135,8 @@
             
             <div class="divider"></div>
 
-            {% if photo.review_status == 0 %}
-                Zdjęcie nie było sprawdzane.
-            {% elif photo.review_status == 1 and photo.is_private %}
-                <p style="color: red">Zdjęcie musi być publiczne, aby mogło być sprawdzone przez innych użytkowników</p>
+            {% if photo.is_private %}
+                Zdjęcie musi zostać upublicznione, aby mogło być weryfikowane przez innych użytkowników
             {% else %}
                 <div class="w-3/4">
                     {% if reviews %}
@@ -164,7 +186,7 @@
                         {% endfor %}
                     {% endif %}
 
-                    {% if photo.review_status == 1 and user.is_authenticated %}
+                    {% if user.is_authenticated %}
                         <legend class="fieldset-legend text-sm">Pomóż w weryfikacji zwierzaka</legend>
                         <form class="flex justify-between" method="post" action="{% url 'photo:post_review' photo.uuid %}">
                             {% csrf_token %}
@@ -177,7 +199,7 @@
                                 </svg>
                             </button>
                         </form>
-                    {% elif photo.review_status == 1 %}
+                    {% else %}
                         <legend class="fieldset-legend text-sm">Aby pomóc w weryfikacji zwierzaka, zaloguj się.</legend>
                     {% endif %}
                 </div>

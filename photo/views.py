@@ -7,11 +7,9 @@ import requests
 from PIL import Image
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST, require_GET
-from django.http import FileResponse, HttpResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.core.files.base import ContentFile
-
-from mgr import settings
 
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
@@ -85,7 +83,8 @@ def upload(request):
                     image = image_webp,
                     owner = request.user if request.user.is_authenticated else None,
                     prediction = '',
-                    prediction_confidence=0
+                    prediction_confidence=0,
+                    review_status = 1
                 )
                 if response.get('category') != 1:
                     image_object.prediction = 'empty'
@@ -96,6 +95,8 @@ def upload(request):
                     image_object.prediction  = detected_animal
                     image_object.prediction_confidence = confidence
                     image_object.bbox = json.dumps(bbox)
+                    if confidence > 0.95:
+                        image_object.review_status = 0
                 image_object.save()
             except Exception as e:
                 photo_path = None
@@ -177,15 +178,14 @@ def toggle_review(request, uuid):
     review_status values:
      0 - not to be reviewed
      1 - to be reviewed
-     2 - reviewed
     """
-    photo = get_object_or_404(Photo, uuid=uuid, owner=request.user)
+    photo = get_object_or_404(Photo, uuid=uuid)
 
-    if request.method == "POST":
-        if photo.review_status != 1:
-            photo.review_status = 1
+    if request.method == "POST" and (photo.owner == request.user or request.user.score > 99):
+        if photo.review_status == 1:
+            photo.review_status = 0
         else:
-            photo.review_status = 2
+            photo.review_status = 1
 
         photo.save()
         return redirect(photo)
