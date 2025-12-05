@@ -277,3 +277,13 @@ def set_location(request, uuid):
         return redirect(photo)
 
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
+
+
+@require_GET
+@login_required
+def protected_photo(request, filename):
+    """Protect photo serving."""
+    path = os.path.join(settings.MEDIA_ROOT, "photos", filename)
+    if not user_owns_photo(request.user, filename):
+        return HttpResponse(status=401)
+    return FileResponse(open(path, "rb"))

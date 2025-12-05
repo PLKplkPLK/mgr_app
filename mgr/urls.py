@@ -19,14 +19,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from photo.views import upload
+from photo.views import upload, protected_photo
 
 urlpatterns = [
     # it could be (route, view), but it's better
     # to have separate urls for that
     path('photo/', include("photo.urls")),
+    path('media/photos/<str:filename>', protected_photo),
     path('account/', include("account.urls")),
     path('gallery/', include("gallery.urls")),
     path('admin/', admin.site.urls),
     path('', upload)
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
