@@ -17,15 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from django.conf.urls.static import static
+# from django.conf.urls.static import static
 
-from photo.views import upload, protected_photo
+from photo.views import upload
 
 urlpatterns = [
     # it could be (route, view), but it's better
     # to have separate urls for that
     path('photo/', include("photo.urls")),
-    path('media/photos/<str:filename>', protected_photo),
     path('account/', include("account.urls")),
     path('gallery/', include("gallery.urls")),
     path('admin/', admin.site.urls),

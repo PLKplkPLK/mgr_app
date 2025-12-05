@@ -7,9 +7,11 @@ import requests
 from PIL import Image
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST, require_GET
+from django.http import FileResponse, HttpResponse, HttpResponseBadRequest
 from django.core.files.base import ContentFile
+
+from mgr import settings
 
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
@@ -277,13 +279,3 @@ def set_location(request, uuid):
         return redirect(photo)
 
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
-
-
-@require_GET
-@login_required
-def protected_photo(request, filename):
-    """Protect photo serving."""
-    path = os.path.join(settings.MEDIA_ROOT, "photos", filename)
-    if not user_owns_photo(request.user, filename):
-        return HttpResponse(status=401)
-    return FileResponse(open(path, "rb"))
