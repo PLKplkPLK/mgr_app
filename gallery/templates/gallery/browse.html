@@ -16,14 +16,14 @@
                 <a class="text-center text-2xl" href="{% url 'photo:photo_detail' photo.uuid %}">
                     <div class="card bg-base-100 shadow-sm w-full">
                         <figure>
-                            {% if photo.review_status == 1 %}
-                                <img src="/media/question_mark.png" class="absolute top-2 right-2 w-6 h-6"/>
-                            {% endif %}
                             {% thumbnail photo.image "500x282" crop="center" quality=85 as im %}
                                 <div class="image-wrapper">
                                     <img src="{{ im.url }}" loading="lazy" alt="Zdjęcie zwierzątka" class="lazy-image" onload="this.classList.add('loaded')"/>
                                 </div>
                             {% endthumbnail %}
+                            {% if photo.review_status == 1 %}
+                                <img src="/media/question_mark.png" class="absolute -top-2 -right-2 w-16 h-16 object-contain"/>
+                            {% endif %}
                         </figure>
                         <div class="justify-between p-4 flex items-center">
                             <div class="text-lg">{{ photo.prediction }}</div>
