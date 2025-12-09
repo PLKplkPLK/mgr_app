@@ -37,19 +37,18 @@
                             <img class="absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full max-w-22" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
                         {% endif %}
                         <img class="rounded cursor-pointer object-cover min-w-sm" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
-                        
                     </div>
 
                     <div class="justify-between flex items-center">
                         {% if photo.owner == user or user.protector %}
                                 <a id="toggle_form_button" class="py-2" onclick="rename_modal.showModal(); return false;">
                                     <div class="inline-flex items-center border rounded-lg overflow-hidden border-stone-400 cursor-pointer">
-                                        <div class="px-3 py-1 text-2xl font-medium">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
+                                        <div class="px-3 py-1 text-2xl font-medium">{{ photo_display_name }}</div>
                                         <div class="border-l border-stone-300 px-3 text-xl">✏️</div>
                                     </div>
                                 </a>
                             {% else %}
-                                <div class="py-1 px-2 text-xl font-medium">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
+                                <div class="py-1 px-2 text-xl font-medium">{{ photo_display_name }}</div>
                             {% endif %}
                         <div class="text-stone-500 text-md">{{ photo.upload_time|date:"j.n.Y" }}</div>
                     </div>
@@ -69,7 +68,7 @@
                 </dialog>
 
                 <div class="flex flex-col items-center text-center text-xl font-medium">
-                    <div>Klasyfikacja modelu: {{ photo.prediction }}</div>
+                    <div>Klasyfikacja modelu: {{ prediction_display_name }}</div>
                     <div class="text-stone-500">Prawdopodobieństwo: {{ photo.prediction_confidence |floatformat:1 }}%</div>
                 </div>
             </div>
@@ -83,7 +82,12 @@
                     <div class="modal-action">
                         <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
                             {% csrf_token %}
-                            <input class="input mr-4" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
+                            <select class="input mr-4" name="custom_name" required>
+                                <option value="">-- Wybierz zwierzę --</option>
+                                {% for animal_key, animal_name in animals_map %}
+                                    <option value="{{ animal_key }}" {% if photo.custom_name == animal_key %}selected{% endif %}>{{ animal_name }}</option>
+                                {% endfor %}
+                            </select>
                             <button type="submit" class="btn">Zapisz</button>
                         </form>
                     </div>
@@ -250,7 +254,7 @@
     // render existing marker
     var marker_prev;
     {% if photo.localization_latitude and photo.localization_longitude %}
-    marker_prev = L.marker([{{ photo.localization_latitude | floatformat }}, {{ photo.localization_longitude | floatformat }}]).addTo(map).bindPopup('{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction_1 }} {% endif %}');
+    marker_prev = L.marker([{{ photo.localization_latitude | floatformat }}, {{ photo.localization_longitude | floatformat }}]).addTo(map).bindPopup('{{ photo_display_name }}');
     {% endif %}
 
     {% if photo.owner == user %}

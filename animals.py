@@ -1,0 +1,31 @@
+animals_pl_map = {
+    'badger': 'Borsuk europejski',
+    'bear': 'Niedźwiedź brunatny',
+    'beaver': 'Bóbr europejski',
+    'bird': 'Ptak',
+    'bison': 'Żubr europejski',
+    'cat': 'Kot domowy',
+    'dog': 'Pies domowy',
+    'empty': 'Brak',
+    'fallow deer': 'Daniel zwyczajny',
+    'fox': 'Lis rudy',
+    'hare': 'Zającowate',
+    'lynx': 'Ryś euroazjatycki',
+    'marten': 'Kuna',
+    'mink': 'Norka',
+    'moose': 'Łoś euroazjatycki',
+    'otter': 'Wydra europejska',
+    'polecat': 'Tchórz zwyczajny',
+    'raccoon': 'Szop pracz',
+    'raccoon dog': 'Jenot azjatycki',
+    'red deer': 'Jeleń szlachetny',
+    'roe deer': 'Sarna europejska',
+    'squirrel': 'Wiewiórka pospolita',
+    'stoat': 'Gronostaj europejski',
+    'weasel': 'Łasica pospolita',
+    'wild boar': 'Dzik euroazjatycki',
+    'wildcat': 'Żbik europejski',
+    'wolf': 'Wilk szary'
+}
+
+animals_list = list(animals_pl_map.keys())

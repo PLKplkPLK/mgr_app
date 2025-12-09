@@ -1,10 +1,19 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Page, Paginator
 
 from photo.models import Photo
+from animals import animals_pl_map
 
 app_name = 'gallery'
+animals_pl_map = {k: v for k, v in sorted(animals_pl_map.items(), key=lambda item: item[1])}
+
+def add_display_name_to_photos(page_obj: Page) -> Page:
+    for photo in page_obj:
+        animal_name = photo.custom_name if photo.custom_name else photo.prediction
+        photo.display_name = animals_pl_map.get(animal_name)
+        print(photo.display_name)
+    return page_obj
 
 def browse(request):
     """
@@ -15,6 +24,7 @@ def browse(request):
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    page_obj = add_display_name_to_photos(page_obj)
     
     return render(request, "gallery/browse.html", {
         "page_obj": page_obj
@@ -30,6 +40,7 @@ def browse_my(request):
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    page_obj = add_display_name_to_photos(page_obj)
     
     return render(request, "gallery/browse.html", {
         "page_obj": page_obj
@@ -45,6 +56,7 @@ def browse_reviews(request):
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    page_obj = add_display_name_to_photos(page_obj)
     
     return render(request, "gallery/browse.html", {
         "page_obj": page_obj

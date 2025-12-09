@@ -16,30 +16,11 @@ from account.models import Correction
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
 from .helpers import add_noise_to_localization
+from animals import animals_list, animals_pl_map
 
 
 logger = logging.getLogger(__name__)
-
-map_animals_pl = {  # Frontend side
-    'fox': 'Lis rudy',
-    'bear': 'Niedźwiedź brunatny',
-    'wolf': 'Wilk szary',
-    'domestic cat': 'Kot domowy',
-    'fallow deer': 'Daniel zwyczajny',
-    'empty': 'Brak zwierzęcia',
-    'roe deer': 'Sarna europejska',
-    'red deer': 'Jeleń szlachetny',
-    'pine marten': 'Kuna leśna',
-    'domestic dog': 'Pies domowy',
-    'martes species': 'Kuna (rodzaj)',
-    'bison': 'Żubr europejski',
-    'raccoon': 'Szop pracz',
-    'squirrel': 'Wiewiórka pospolita',
-    'wild boar': 'Dzik euroazjatycki',
-    'moose': 'Łoś euroazjatycki',
-    'hare': 'Zając szarak',
-    'badger': 'Borsuk europejski',
-}
+animals_pl_map = {k: v for k, v in sorted(animals_pl_map.items(), key=lambda item: item[1])}
 
 
 def convert_image_to_webp(uploaded_file) -> ContentFile:
@@ -133,10 +114,17 @@ def photo_detail(request, uuid):
 
     photo.prediction_confidence = photo.prediction_confidence * 100
 
+    photo_display_name = photo.custom_name if photo.custom_name else photo.prediction
+    photo_display_name = animals_pl_map.get(photo_display_name)
+    prediction_display_name = animals_pl_map.get(photo.prediction)
+
     return render(request, "photo/details.html", {
         "photo": photo,
+        "photo_display_name": photo_display_name,
+        "prediction_display_name": prediction_display_name,
         "post_review_form": post_review_form,
-        "reviews": reviews
+        "reviews": reviews,
+        'animals_map': animals_pl_map.items()
     })
 
 
@@ -223,9 +211,9 @@ def toggle_helpful(request, review_id:int):
 
     if review.photo.owner == request.user and review.owner != request.user:
         if review.helpful:
-            review.owner.score -= 1
+            review.owner.score -= 1 # type: ignore
         else:
-            review.owner.score += 1
+            review.owner.score += 1 # type: ignore
         review.owner.save()
         review.helpful = not review.helpful
         review.save()
@@ -249,9 +237,12 @@ def delete_review(request, review_id:int):
 @require_POST
 @login_required
 def rename_photo(request, uuid):
+    """Change photo's custom name."""
     photo = get_object_or_404(Photo, uuid=uuid)
-
     new_name = request.POST.get('custom_name')
+    if new_name not in animals_list:
+        return HttpResponseBadRequest();
+
     if new_name and (photo.owner == request.user or request.user.protector):
         if request.user != photo.owner:
             log = Correction(
