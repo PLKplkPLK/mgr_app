@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 
 {% block content %}
-{% if photo.owner == user or user.score > 99 %}
+{% if photo.owner == user or user.protector %}
     <style>
         @keyframes swing {
             0% { transform: rotate(0deg); }
@@ -26,7 +26,7 @@
         <div class="card-inner">
             <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1">
                     <div class="flex flex-col relative">
-                        {% if photo.owner == user or user.score > 99 %}
+                        {% if photo.owner == user or user.protector %}
                             <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
                                 {% csrf_token %}
                                 <button type="submit" class="rotate-anim cursor-pointer absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full max-w-22">
@@ -34,14 +34,14 @@
                                 </button>
                             </form>
                         {% else %}
-                            <img class="absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
+                            <img class="absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full max-w-22" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
                         {% endif %}
                         <img class="rounded cursor-pointer object-cover min-w-sm" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
                         
                     </div>
 
                     <div class="justify-between flex items-center">
-                        {% if photo.owner == user or user.score > 99 %}
+                        {% if photo.owner == user or user.protector %}
                                 <a id="toggle_form_button" class="py-2" onclick="rename_modal.showModal(); return false;">
                                     <div class="inline-flex items-center border rounded-lg overflow-hidden border-stone-400 cursor-pointer">
                                         <div class="px-3 py-1 text-2xl font-medium">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
@@ -157,7 +157,7 @@
                                     <div class="w-11 rounded-full"><img src="{{ review.owner.avatar }}" alt="awatar"/></div>
                                 </div>
                                 <div class="chat-header">
-                                    <p class="text-sm mr-4">{{ review.owner.username }} {% if review.owner.score > 99 %}⚜️{% endif %}</p>
+                                    <p class="text-sm mr-4">{{ review.owner.username }} {% if review.owner.protector %}⚜️{% endif %}</p>
                                     <p class="text-xs opacity-50">{{ review.upload_time|date:"j.n.Y, G:i:s" }}</p>
                                 </div>
                                 <div class="chat-bubble {% if review.helpful %}bg-green-100{% else %}bg-base-300{% endif%}">

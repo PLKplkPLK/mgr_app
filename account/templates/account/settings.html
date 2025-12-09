@@ -15,8 +15,8 @@
 
     <div class="text-center">
         Masz {{ user.score }} pomocnych komentarzy.<br>
-        {% if user.score < 100 %}
-            Uzyskaj 100, aby zdobyć odznakę Strażnika Przyrody ⚜️.
+        {% if not user.protector %}
+            Uzyskaj 50 i zgodę admina, aby zdobyć odznakę Strażnika Przyrody ⚜️.
         {% else %}
             Posiadasz odznakę Strażnika Przyrody ⚜️. Możesz zmieniać przypisanie zwierząt.
         {% endif %}

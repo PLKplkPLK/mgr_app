@@ -26,7 +26,7 @@
                             {% endif %}
                         </figure>
                         <div class="justify-between p-4 flex items-center">
-                            <div class="text-lg">{{ photo.prediction }}</div>
+                            <div class="text-lg">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
                             <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
                         </div>
                     </div>

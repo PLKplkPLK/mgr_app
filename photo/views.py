@@ -11,6 +11,8 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.core.files.base import ContentFile
 
+from account.models import Correction
+
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
 from .helpers import add_noise_to_localization
@@ -181,7 +183,7 @@ def toggle_review(request, uuid):
     """
     photo = get_object_or_404(Photo, uuid=uuid)
 
-    if request.method == "POST" and (photo.owner == request.user or request.user.score > 99):
+    if request.method == "POST" and (photo.owner == request.user or request.user.protector):
         if photo.review_status == 1:
             photo.review_status = 0
         else:
@@ -250,7 +252,13 @@ def rename_photo(request, uuid):
     photo = get_object_or_404(Photo, uuid=uuid)
 
     new_name = request.POST.get('custom_name')
-    if new_name and (photo.owner == request.user or request.user.score > 99):
+    if new_name and (photo.owner == request.user or request.user.protector):
+        if request.user != photo.owner:
+            log = Correction(
+                user = request.user.username,
+                message = f"Changed name of photo '{photo.uuid}' from '{photo.custom_name}' to '{new_name}'"
+            )
+            log.save()
         photo.custom_name = new_name
         photo.save()
 

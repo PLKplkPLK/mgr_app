@@ -10,5 +10,5 @@ admin.site.register(Correction)
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        ("Extra fields", {"fields": ("avatar", "score")}),
+        ("Extra fields", {"fields": ("avatar", "score", "protector")}),
     )
