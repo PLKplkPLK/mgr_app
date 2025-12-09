@@ -14,7 +14,12 @@
     <div class="divider"></div>
 
     <div class="text-center">
-        Masz {{ user.score }} pomocnych komentarzy.<br>Uzyskaj 100, aby zdobyć odznakę znawcy zwierząt.
+        Masz {{ user.score }} pomocnych komentarzy.<br>
+        {% if user.score < 100 %}
+            Uzyskaj 100, aby zdobyć odznakę Strażnika Przyrody ⚜️.
+        {% else %}
+            Posiadasz odznakę Strażnika Przyrody ⚜️. Możesz zmieniać przypisanie zwierząt.
+        {% endif %}
     </div>
     
     <div class="divider"></div>

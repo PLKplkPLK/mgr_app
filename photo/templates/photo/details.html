@@ -24,26 +24,36 @@
 <div class="div-whole mb-22">
     <div class="">
         <div class="card-inner">
-            <div class="bg-white p-4 rounded-md shadow mb-6">
-                <figure>
-                    {% if photo.owner == user or user.score > 99 %}
-                    <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
-                        {% csrf_token %}
-                        <button type="submit" class="rotate-anim absolute top-3 right-3 w-16 h-16 object-contain" style="border: none; background: transparent; padding: 0;">
-                            <img class="" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
-                        </button>
-                    </form>
-                    {% else %}
-                    <img style="width: 20%; height: 20%" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
-                </figure>
-                {% endif %}
-                <div class="flex flex-col">
-                    <img class="rounded-xs cursor-pointer" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
-                    <div class="justify-between flex items-center">
-                        <button id="toggle_form_button" class="btn-second" onclick="rename_modal.showModal()">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %} ✏️</button>
-                        <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
+            <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1">
+                    <div class="flex flex-col relative">
+                        {% if photo.owner == user or user.score > 99 %}
+                            <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
+                                {% csrf_token %}
+                                <button type="submit" class="rotate-anim cursor-pointer absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full max-w-22">
+                                    <img class="" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
+                                </button>
+                            </form>
+                        {% else %}
+                            <img class="absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
+                        {% endif %}
+                        <img class="rounded cursor-pointer object-cover min-w-sm" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
+                        
                     </div>
-                </div>
+
+                    <div class="justify-between flex items-center">
+                        {% if photo.owner == user or user.score > 99 %}
+                                <a id="toggle_form_button" class="py-2" onclick="rename_modal.showModal(); return false;">
+                                    <div class="inline-flex items-center border rounded-lg overflow-hidden border-stone-400 cursor-pointer">
+                                        <div class="px-3 py-1 text-2xl font-medium">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
+                                        <div class="border-l border-stone-300 px-3 text-xl">✏️</div>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="py-1 px-2 text-xl font-medium">{% if photo.custom_name %} {{ photo.custom_name }} {% else %} {{ photo.prediction }} {% endif %}</div>
+                            {% endif %}
+                        <div class="text-stone-500 text-md">{{ photo.upload_time|date:"j.n.Y" }}</div>
+                    </div>
+
 
                 <!-- Modal -->
                 <dialog id="zoomModal" class="modal">
@@ -58,48 +68,49 @@
                     </form>
                 </dialog>
 
-                <div class="">
-                    <p>Model zaklasyfikował zdjęcie jako {{ photo.prediction }}, z prawdopodobieństwem {{ photo.prediction_confidence |floatformat:1 }}%</p>
+                <div class="flex flex-col items-center text-center text-xl font-medium">
+                    <div>Klasyfikacja modelu: {{ photo.prediction }}</div>
+                    <div class="text-stone-500">Prawdopodobieństwo: {{ photo.prediction_confidence |floatformat:1 }}%</div>
                 </div>
             </div>
 
+            <dialog id="rename_modal" class="modal">
+                <div class="modal-box flex flex-col items-center">
+                    <form method="dialog">
+                        <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    <h3 class="text-lg font-bold">Zmień nazwę</h3>
+                    <div class="modal-action">
+                        <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
+                            {% csrf_token %}
+                            <input class="input mr-4" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
+                            <button type="submit" class="btn">Zapisz</button>
+                        </form>
+                    </div>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
+
             {% if photo.owner == user %}
-                <div class="flex justify-center space-x-8 mb-4">
+                <div class="flex justify-center space-x-8 mt-6">
                     <form method="post" action="{% url 'photo:delete_photo' photo.uuid %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć zdjęcie?');">
                         {% csrf_token %}
-                        <button class='btn-second' type="submit">🗑️</button>
+                        <button class='btn-second text-2xl' type="submit">🗑️</button>
                     </form>
 
                     <form>
-                        <button id="toggle_form_button" class="btn-second m-auto" onclick="location_modal.showModal()">🌍</button>
+                        <button id="toggle_form_button" class="btn-second m-auto text-2xl" onclick="location_modal.showModal()">🌍</button>
                     </form>
 
                     <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
                         {% csrf_token %}
-                        <button class='btn-second' type="submit">
+                        <button class='btn-second text-2xl' type="submit">
                             {% if photo.is_private %}🔐{% else %}🔓{% endif %}
                         </button>
                     </form>
                 </div>
-
-                <dialog id="rename_modal" class="modal">
-                    <div class="modal-box flex flex-col items-center">
-                        <form method="dialog">
-                            <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                        </form>
-                        <h3 class="text-lg font-bold">Zmień nazwę</h3>
-                        <div class="modal-action">
-                            <form class="flex" method="post" action="{% url 'photo:rename_photo' photo.uuid %}">
-                                {% csrf_token %}
-                                <input class="input mr-4" type="text" name="custom_name" value="{% if photo.custom_name %}{{ photo.custom_name }}{% endif %}" required>
-                                <button type="submit" class="btn">Zapisz</button>
-                            </form>
-                        </div>
-                    </div>
-                    <form method="dialog" class="modal-backdrop">
-                        <button>close</button>
-                    </form>
-                </dialog>
 
                 <dialog id="location_modal" class="modal">
                     <div class="modal-box max-w-full flex flex-col items-center">
@@ -146,7 +157,7 @@
                                     <div class="w-11 rounded-full"><img src="{{ review.owner.avatar }}" alt="awatar"/></div>
                                 </div>
                                 <div class="chat-header">
-                                    <p class="text-sm mr-4">{{ review.owner.username }} {% if review.owner.score > 99 %}👑{% endif %}</p>
+                                    <p class="text-sm mr-4">{{ review.owner.username }} {% if review.owner.score > 99 %}⚜️{% endif %}</p>
                                     <p class="text-xs opacity-50">{{ review.upload_time|date:"j.n.Y, G:i:s" }}</p>
                                 </div>
                                 <div class="chat-bubble {% if review.helpful %}bg-green-100{% else %}bg-base-300{% endif%}">

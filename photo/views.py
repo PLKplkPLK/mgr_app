@@ -250,7 +250,7 @@ def rename_photo(request, uuid):
     photo = get_object_or_404(Photo, uuid=uuid)
 
     new_name = request.POST.get('custom_name')
-    if new_name and photo.owner == request.user:
+    if new_name and (photo.owner == request.user or request.user.score > 99):
         photo.custom_name = new_name
         photo.save()
 
