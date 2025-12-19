@@ -21,6 +21,7 @@ class Photo(models.Model):
     custom_name = models.TextField(null=True)
     localization_latitude = models.FloatField(null=True)
     localization_longitude = models.FloatField(null=True)
+    n_times_seen = models.IntegerField(default=0)
 
     def __str__(self):
         return 'Photo of id: ' + str(self.uuid)

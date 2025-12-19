@@ -13,10 +13,21 @@
             80% { transform: rotate(2deg); }
             100% { transform: rotate(0deg); }
         }
+        @keyframes pop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            60% { transform: scale(1); }
+            70% { transform: scale(1); }
+            80% { transform: scale(1); }
+        }
 
         .rotate-anim {
             display: inline-block;
-            animation: swing 1.5s infinite ease-in-out;
+            animation: swing 1.5s 15 ease-in-out;
+        }
+        .pop-anim {
+            animation: pop 1.5s 15 ease-in-out;
         }
     </style>
 {% endif %}
@@ -29,8 +40,8 @@
                         {% if photo.owner == user or user.protector %}
                             <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
                                 {% csrf_token %}
-                                <button type="submit" class="rotate-anim cursor-pointer absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full max-w-22">
-                                    <img class="" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
+                                <button type="submit" title="Kliknij, aby zmienić status weryfikacji" class="rotate-anim cursor-pointer absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full max-w-22">
+                                    <img class="pop-anim" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
                                 </button>
                             </form>
                         {% else %}
@@ -97,6 +108,25 @@
                 </form>
             </dialog>
 
+            {% if photo.owner == user and photo.n_times_seen < 3 %}
+                <div class="w-5/6 mt-6 rounded-lg border border-yellow-200 bg-white px-4 shadow-sm py-3 text-lg text-yellow-900 flex gap-3 items-start">
+                    <span class="text-lg leading-none">⚠️</span>
+                    <div>
+                        <p class="text-yellow-800 text-justify">
+                        {% if photo.is_private %}
+                            Jeżeli klasyfikacja cię nie satysfakcjonuje upublicznij zdjęcie i kliknij przycisk u góry zdjęcia, aby poprosić innych użytkowników o pomoc.
+                        {% elif photo.prediction_confidence >= 90 and photo.review_status == 0 %}
+                            Jeżeli klasyfikacja cię nie satysfakcjonuje kliknij przycisk u góry zdjęcia, aby poprosić innych użytkowników o pomoc.
+                        {% elif photo.prediction_confidence < 90 and photo.review_status == 1 %}
+                            Klasyfikacja zwierzęcia jest niepewna. Zostało ono oznaczone jako "do weryfikacji" - inni użytkownicy mogą pomóc w klasyfikacji. Możesz to zmienić klikając przycisk u góry zdjęcia.
+                        {% else %}
+                            Możesz kliknąć w przycisk u góry zdjęcia, aby zmienić przypisanie
+                        {% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
             {% if photo.owner == user %}
                 <div class="flex justify-center space-x-8 mt-6">
                     <form method="post" action="{% url 'photo:delete_photo' photo.uuid %}" onsubmit="return confirm('Jesteś pewien, że chcesz usunąć zdjęcie?');">
@@ -150,6 +180,7 @@
             
             <div class="divider"></div>
 
+
             {% if photo.is_private %}
                 Zdjęcie musi zostać upublicznione, aby mogło być weryfikowane przez innych użytkowników
             {% else %}
@@ -200,22 +231,24 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-
-                    {% if user.is_authenticated %}
-                        <legend class="fieldset-legend text-sm">Pomóż w weryfikacji zwierzaka</legend>
-                        <form class="flex justify-between" method="post" action="{% url 'photo:post_review' photo.uuid %}">
-                            {% csrf_token %}
-                            <fieldset class="fieldset w-full mr-4">
-                                {{ post_review_form.review|add_class:"input" }}
-                            </fieldset>
-                            <button class="btn btn-circle bg-stone-300 m-auto" type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                </svg>
-                            </button>
-                        </form>
-                    {% else %}
-                        <legend class="fieldset-legend text-sm">Aby pomóc w weryfikacji zwierzaka, zaloguj się.</legend>
+                    
+                    {% if photo.review_status == 1 %}
+                        {% if user.is_authenticated %}
+                            <legend class="fieldset-legend text-sm">Pomóż w weryfikacji zwierzaka</legend>
+                            <form class="flex justify-between" method="post" action="{% url 'photo:post_review' photo.uuid %}">
+                                {% csrf_token %}
+                                <fieldset class="fieldset w-full mr-4">
+                                    {{ post_review_form.review|add_class:"input" }}
+                                </fieldset>
+                                <button class="btn btn-circle bg-stone-300 m-auto" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        {% else %}
+                            <legend class="fieldset-legend text-sm">Aby pomóc w weryfikacji zwierzaka, zaloguj się.</legend>
+                        {% endif %}
                     {% endif %}
                 </div>
             {% endif %}

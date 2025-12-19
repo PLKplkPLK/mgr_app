@@ -78,7 +78,7 @@ def upload(request):
                     image_object.prediction  = detected_animal
                     image_object.prediction_confidence = confidence
                     image_object.bbox = json.dumps(bbox)
-                    if confidence > 0.95:
+                    if confidence > 0.9:
                         image_object.review_status = 0
                 image_object.save()
             except Exception as e:
@@ -108,6 +108,9 @@ def photo_detail(request, uuid):
 
     if photo.is_private and photo.owner != request.user:
         return HttpResponse('Unauthorized', status=401)
+    
+    photo.n_times_seen = photo.n_times_seen + 1
+    photo.save()
 
     post_review_form = PostReviewForm()
     reviews = Review.objects.filter(photo=photo)
