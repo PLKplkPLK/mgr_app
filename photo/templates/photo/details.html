@@ -21,6 +21,15 @@
             70% { transform: scale(1); }
             80% { transform: scale(1); }
         }
+        @keyframes bbox-colors {
+            0%   { border-color: #ff1d1d; }
+            25%   { border-color: #ef4444; }
+            30%  { border-color: #42e3ff; }
+            60% { border-color: #06b6d4; }
+            65% { border-color: #ffff00; }
+            90% { border-color: #ffff2d; }
+            100% { border-color: #ef4444; }
+        }
 
         .rotate-anim {
             display: inline-block;
@@ -28,6 +37,9 @@
         }
         .pop-anim {
             animation: pop 1.5s 15 ease-in-out;
+        }
+        .colorful-bbox {
+            animation: bbox-colors 10s linear infinite;
         }
     </style>
 {% endif %}
@@ -37,6 +49,11 @@
         <div class="card-inner">
             <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1">
                     <div class="flex flex-col relative">
+                        <img class="rounded cursor-pointer object-cover min-w-sm" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
+                        <div class="absolute border-2 colorful-bbox"
+                            style="left: {{ bbox.0|floatformat:6 }}%; top: {{ bbox.1|floatformat:6 }}%; width: {{ bbox.2|floatformat:6 }}%; height: {{ bbox.3|floatformat:6 }}%;">
+                        </div>
+
                         {% if photo.owner == user or user.protector %}
                             <form method="post" action="{% url 'photo:toggle_review' photo.uuid %}">
                                 {% csrf_token %}
@@ -47,7 +64,6 @@
                         {% else %}
                             <img class="absolute -top-2.5 -right-2.5 w-1/6 object-contain shadow-md shadow-stone-700 rounded-full max-w-22" src="{% if photo.review_status == 1 %}/media/question_mark.png{% else %}/media/check_mark.png{% endif %}">
                         {% endif %}
-                        <img class="rounded cursor-pointer object-cover min-w-sm" src="{{ photo.image.url }}" onclick="showModal(this.src)" alt="Zdjęcie zwierzątka">
                     </div>
 
                     <div class="justify-between flex items-center">
@@ -68,10 +84,16 @@
                 <!-- Modal -->
                 <dialog id="zoomModal" class="modal">
                     <div class="modal-box max-w-full rounded-sm">
+                        <div class="relative w-full">
+                            <img id="zoomedImage" class="w-full h-auto rounded-xs" />
+                            <div class="absolute border-2 colorful-bbox"
+                                style="left: {{ bbox.0|floatformat:6 }}%; top: {{ bbox.1|floatformat:6 }}%; width: {{ bbox.2|floatformat:6 }}%; height: {{ bbox.3|floatformat:6 }}%;">
+                            </div>
+                        </div>
+
                         <form method="dialog">
                             <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
                         </form>
-                        <img id="zoomedImage" class="w-full h-auto rounded-xs" />
                     </div>
                     <form method="dialog" class="modal-backdrop">
                         <button>Close</button>

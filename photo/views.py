@@ -121,13 +121,20 @@ def photo_detail(request, uuid):
     photo_display_name = animals_pl_map.get(photo_display_name)
     prediction_display_name = animals_pl_map.get(photo.prediction)
 
+    if photo.bbox:
+        bbox = json.loads(photo.bbox)
+        bbox = [element * 100 for element in bbox]
+    else:
+        bbox = [0, 0, 0, 0]
+
     return render(request, "photo/details.html", {
         "photo": photo,
         "photo_display_name": photo_display_name,
         "prediction_display_name": prediction_display_name,
         "post_review_form": post_review_form,
         "reviews": reviews,
-        'animals_map': animals_pl_map.items()
+        'animals_map': animals_pl_map.items(),
+        'bbox': bbox
     })
 
 
