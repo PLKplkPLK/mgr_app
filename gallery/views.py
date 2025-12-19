@@ -61,3 +61,18 @@ def browse_reviews(request):
     return render(request, "gallery/browse.html", {
         "page_obj": page_obj
     })
+
+def browse_popular(request):
+    """
+    View for browsing images of other users
+    """
+    photos = Photo.objects.filter(is_private=False).order_by('-n_times_seen')
+    paginator = Paginator(photos, 10)
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    page_obj = add_display_name_to_photos(page_obj)
+    
+    return render(request, "gallery/browse.html", {
+        "page_obj": page_obj
+    })

@@ -4,10 +4,11 @@
 
 {% block content %}
 <div class="browse-container items-top mb-18">
-    <div role="tablist" class="tabs tabs-lift tabs-lg justify-center mb-4">
-        <a role="tab tab-xl" class="{% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_my' %}">Moje</a>
-        <a role="tab" class="{% if request.resolver_match.url_name == 'browse' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse' %}">Społeczność</a>
-        <a role="tab" class="{% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
+    <div role="tablist" class="tabs tabs-lift tabs-lg justify-center mb-4 flex flex-wrap">
+        <a role="tab tab-xl" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_my' %}">Moje</a>
+        <a role="tab" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse' %}">Społeczność</a>
+        <a role="tab" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
+        <a role="tab" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_popular' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_popular' %}">Najpopularniejsze</a>
     </div>
 
     {% if page_obj %}
