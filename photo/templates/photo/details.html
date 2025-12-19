@@ -21,15 +21,6 @@
             70% { transform: scale(1); }
             80% { transform: scale(1); }
         }
-        @keyframes bbox-colors {
-            0%   { border-color: #ff1d1d; }
-            25%   { border-color: #ef4444; }
-            30%  { border-color: #42e3ff; }
-            60% { border-color: #06b6d4; }
-            65% { border-color: #ffff00; }
-            90% { border-color: #ffff2d; }
-            100% { border-color: #ef4444; }
-        }
 
         .rotate-anim {
             display: inline-block;
@@ -38,11 +29,24 @@
         .pop-anim {
             animation: pop 1.5s 15 ease-in-out;
         }
-        .colorful-bbox {
-            animation: bbox-colors 10s linear infinite;
-        }
     </style>
 {% endif %}
+
+<style>
+    @keyframes bbox-colors {
+        0%   { border-color: #ff1d1d; }
+        25%   { border-color: #ef4444; }
+        30%  { border-color: #42e3ff; }
+        60% { border-color: #06b6d4; }
+        65% { border-color: #ffff00; }
+        90% { border-color: #ffff2d; }
+        100% { border-color: #ef4444; }
+    }
+
+    .colorful-bbox {
+        animation: bbox-colors 10s linear infinite;
+    }
+</style>
 
 <div class="div-whole mb-22">
     <div class="">
