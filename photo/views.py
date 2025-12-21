@@ -25,7 +25,7 @@ animals_pl_map = {k: v for k, v in sorted(animals_pl_map.items(), key=lambda ite
 
 def convert_image_to_webp(uploaded_file) -> ContentFile:
     img = Image.open(uploaded_file)
-    img = img.convert("RGB")  # Ensures compatibility (e.g. for PNGs with alpha)
+    img = img.convert("RGB")  # Compatibility (e.g. for PNGs with alpha)
     img.thumbnail((2000, 2000))
 
     buffer = BytesIO()
@@ -202,9 +202,9 @@ def post_review(request, uuid):
 
     if request.method == "POST" and form.is_valid():
         review_object = Review.objects.create(
-            owner = request.user,
-            photo = photo,
-            review = form.cleaned_data['review']
+            owner=request.user,
+            photo=photo,
+            review=form.cleaned_data['review']
         )
         review_object.save()
 
@@ -212,7 +212,7 @@ def post_review(request, uuid):
 
 
 @login_required
-def toggle_helpful(request, review_id:int):
+def toggle_helpful(request, review_id: int):
     """
     View that let's owner of photo mark or unmark comment as helpful
     """
@@ -220,9 +220,9 @@ def toggle_helpful(request, review_id:int):
 
     if review.photo.owner == request.user and review.owner != request.user:
         if review.helpful:
-            review.owner.score -= 1 # type: ignore
+            review.owner.score -= 1  # type: ignore
         else:
-            review.owner.score += 1 # type: ignore
+            review.owner.score += 1  # type: ignore
         review.owner.save()
         review.helpful = not review.helpful
         review.save()
@@ -231,7 +231,7 @@ def toggle_helpful(request, review_id:int):
 
 
 @login_required
-def delete_review(request, review_id:int):
+def delete_review(request, review_id: int):
     """
     View that let's post of review delete it
     """
@@ -250,13 +250,13 @@ def rename_photo(request, uuid):
     photo = get_object_or_404(Photo, uuid=uuid)
     new_name = request.POST.get('custom_name')
     if new_name not in animals_list:
-        return HttpResponseBadRequest();
+        return HttpResponseBadRequest()
 
     if new_name and (photo.owner == request.user or request.user.protector):
         if request.user != photo.owner:
             log = Correction(
-                user = request.user.username,
-                message = f"Changed name of photo '{photo.uuid}' from '{photo.custom_name}' to '{new_name}'"
+                user=request.user,
+                message=f"Changed name of photo '{photo.uuid}' from '{photo.custom_name}' to '{new_name}'"
             )
             log.save()
         photo.custom_name = new_name
@@ -281,8 +281,8 @@ def set_location(request, uuid):
 
         if photo.owner == request.user and lat and lng:
             noisy_lat, noisy_lng = add_noise_to_localization(latitude=lat, longitude=lng)
-            photo.localization_latitude=noisy_lat
-            photo.localization_longitude=noisy_lng
+            photo.localization_latitude = noisy_lat
+            photo.localization_longitude = noisy_lng
             photo.save()
         return redirect(photo)
 

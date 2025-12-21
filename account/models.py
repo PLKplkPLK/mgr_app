@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     score = models.PositiveIntegerField(default=0)
     protector = models.BooleanField(default=False)
 
+
 class Correction(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     message = models.CharField(max_length=400)
