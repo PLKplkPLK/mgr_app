@@ -56,18 +56,17 @@ def upload(request):
 
                 # the request
                 response = requests.post(url, files=files, timeout=30)
-                print(response.status_code)
                 if not response.ok:
                     raise Exception(f"Error, status: {response.status_code}")
                 response = response.json()
 
                 image_object = Photo.objects.create(
-                    is_private = form.cleaned_data['is_private'],
-                    image = image_webp,
-                    owner = request.user if request.user.is_authenticated else None,
-                    prediction = '',
+                    is_private=form.cleaned_data['is_private'],
+                    image=image_webp,
+                    owner=request.user if request.user.is_authenticated else None,
+                    prediction='',
                     prediction_confidence=0,
-                    review_status = 1
+                    review_status=1
                 )
                 if response.get('category') != 1:
                     image_object.prediction = 'empty'
@@ -75,7 +74,7 @@ def upload(request):
                     detected_animal = response.get('detected_animal')
                     bbox = response.get('bbox')
                     confidence = response.get('confidence')
-                    image_object.prediction  = detected_animal
+                    image_object.prediction = detected_animal
                     image_object.prediction_confidence = confidence
                     image_object.bbox = json.dumps(bbox)
                     if confidence > 0.9:

@@ -161,7 +161,7 @@
                     </form>
 
                     <form>
-                        <button id="toggle_form_button" class="btn-second m-auto text-2xl" onclick="location_modal.showModal()">🌍</button>
+                        <button id="toggle_form_button" type="button" class="btn-second m-auto text-2xl" onclick="location_modal.showModal()">🌍</button>
                     </form>
 
                     <form method="post" action="{% url 'photo:toggle_photo_privacy' photo.uuid %}">
