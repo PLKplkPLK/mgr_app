@@ -76,6 +76,9 @@ def upload(request):
                     confidence = response.get('confidence')
                     image_object.prediction = detected_animal
                     image_object.prediction_confidence = confidence
+                    print('here#####################')
+                    image_object.prediction_2 = response.get('detected_animal_2')
+                    image_object.prediction_confidence_2 = response.get('confidence_2')
                     image_object.bbox = json.dumps(bbox)
                     if confidence > 0.9:
                         image_object.review_status = 0
@@ -107,7 +110,7 @@ def photo_detail(request, uuid):
 
     if photo.is_private and photo.owner != request.user:
         return HttpResponse('Unauthorized', status=401)
-    
+
     photo.n_times_seen = photo.n_times_seen + 1
     photo.save()
 
@@ -115,10 +118,12 @@ def photo_detail(request, uuid):
     reviews = Review.objects.filter(photo=photo)
 
     photo.prediction_confidence = photo.prediction_confidence * 100
+    photo.prediction_confidence_2 = photo.prediction_confidence_2 * 100
 
     photo_display_name = photo.custom_name if photo.custom_name else photo.prediction
     photo_display_name = animals_pl_map.get(photo_display_name)
     prediction_display_name = animals_pl_map.get(photo.prediction)
+    prediction_display_name_2 = animals_pl_map.get(photo.prediction_2)
 
     if photo.bbox:
         bbox = json.loads(photo.bbox)
@@ -130,6 +135,7 @@ def photo_detail(request, uuid):
         "photo": photo,
         "photo_display_name": photo_display_name,
         "prediction_display_name": prediction_display_name,
+        "prediction_display_name_2": prediction_display_name_2,
         "post_review_form": post_review_form,
         "reviews": reviews,
         'animals_map': animals_pl_map.items(),
@@ -188,7 +194,7 @@ def toggle_review(request, uuid):
 
         photo.save()
         return redirect(photo)
-    
+
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
 
 
@@ -239,7 +245,7 @@ def delete_review(request, review_id: int):
 
     if review.owner == request.user:
         review.delete()
-    
+
     return redirect(review.photo)
 
 
