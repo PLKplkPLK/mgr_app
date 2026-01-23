@@ -1,6 +1,7 @@
 import logging
 import os
 import json
+import math
 from io import BytesIO
 
 import requests
@@ -15,7 +16,7 @@ from account.models import Correction
 
 from .models import Photo, Review
 from .forms import SendPhotoForm, PostReviewForm
-from .helpers import add_noise_to_localization
+# from .helpers import add_noise_to_localization
 from animals import animals_list, animals_pl_map
 
 
@@ -131,6 +132,18 @@ def photo_detail(request, uuid):
     else:
         bbox = [0, 0, 0, 0]
 
+    # Add grid cell calculation for non-owners
+    grid_size = 0.3  # Must match the client-side gridSize
+    cell_bounds = None
+    if photo.owner != request.user and photo.localization_latitude and photo.localization_longitude:
+        lat = photo.localization_latitude
+        lng = photo.localization_longitude
+        cell_lat_start = math.floor(lat / grid_size) * grid_size
+        cell_lng_start = math.floor(lng / grid_size) * grid_size
+        cell_lat_end = cell_lat_start + grid_size
+        cell_lng_end = cell_lng_start + grid_size
+        cell_bounds = [cell_lat_start, cell_lng_start, cell_lat_end, cell_lng_end]
+
     return render(request, "photo/details.html", {
         "photo": photo,
         "photo_display_name": photo_display_name,
@@ -139,7 +152,8 @@ def photo_detail(request, uuid):
         "post_review_form": post_review_form,
         "reviews": reviews,
         'animals_map': animals_pl_map.items(),
-        'bbox': bbox
+        'bbox': bbox,
+        'cell_bounds': cell_bounds
     })
 
 
@@ -172,7 +186,7 @@ def toggle_photo_privacy(request, uuid):
         photo.is_private = not photo.is_private
         photo.save()
         return redirect(photo)
-    
+
     return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
 
 
@@ -280,15 +294,21 @@ def set_location(request, uuid):
         lng = request.POST.get('localization_lng')
 
         if not lat or not lng:
-            return HttpResponseBadRequest({'error': 'Invalid request'}, status=400)
+            return HttpResponseBadRequest(
+                {'error': 'Invalid request'},
+                status=400
+            )
 
         lat = float(lat)
         lng = float(lng)
 
         if photo.owner == request.user and lat and lng:
-            noisy_lat, noisy_lng = add_noise_to_localization(latitude=lat, longitude=lng)
-            photo.localization_latitude = noisy_lat
-            photo.localization_longitude = noisy_lng
+            # noisy_lat, noisy_lng = \
+            #     add_noise_to_localization(latitude=lat, longitude=lng)
+            # photo.localization_latitude = noisy_lat
+            # photo.localization_longitude = noisy_lng
+            photo.localization_latitude = lat
+            photo.localization_longitude = lng
             photo.save()
         return redirect(photo)
 

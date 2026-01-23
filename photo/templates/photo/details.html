@@ -190,7 +190,6 @@
                         {% endif %}
                         <div class="modal-action flex flex-col items-center w-full">
                             {% if photo.owner == user %}
-                                Lokalizacja będzie się różniła od ustawionej, aby chronić zwierzę.
                                 <div id="map"></div>
                                 <form class="text-center" method="post" action="{% url 'photo:set_location' photo.uuid %}">
                                     {% csrf_token %}
@@ -198,10 +197,28 @@
                                     <input type="hidden" id="id_lng" name="localization_lng">
                                     <button type="submit" class="btn">Zapisz</button>
                                 </form>
-                            {% else %}
-                                Lokalizacja różni się od prawdziwej, aby chronić zwierzę.
-                                <div id="map"></div>
                             {% endif %}
+                        </div>
+                    </div>
+                    <form method="dialog" class="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
+            {% elif cell_bounds %}
+                <div class="flex justify-center space-x-8 mt-6">
+                    <button id="toggle_form_button" type="button" class="btn-second m-auto text-2xl" onclick="location_modal.showModal()">🌍 Lokalizacja</button>
+                </div>
+
+                <dialog id="location_modal" class="modal">
+                    <div class="modal-box max-w-full flex flex-col items-center">
+                        <form method="dialog">
+                            <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+
+                        <h3 class="text-lg font-bold">Lokalizacja</h3>
+
+                        <div class="modal-action flex flex-col items-center w-full">
+                            <div id="map"></div>
                         </div>
                     </div>
                     <form method="dialog" class="modal-backdrop">
@@ -211,7 +228,6 @@
             {% endif %}
             
             <div class="divider"></div>
-
 
             {% if photo.is_private %}
                 Zdjęcie musi zostać upublicznione, aby mogło być weryfikowane przez innych użytkowników
@@ -316,29 +332,79 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // render existing marker
-    var marker_prev;
-    {% if photo.localization_latitude and photo.localization_longitude %}
-    marker_prev = L.marker([{{ photo.localization_latitude | floatformat }}, {{ photo.localization_longitude | floatformat }}]).addTo(map).bindPopup('{{ photo_display_name }}');
-    {% endif %}
+    {% if photo.owner != user %}
+        // Grid configuration
+        var gridSize = 0.3; // degrees - adjust this for different grid sizes
+        var highlightColor = '#ff4444'; // color for the highlighted square/hexagon
+        var normalColor = '#0dff0d'; // color for other squares/hexagons
+        var gridOpacity = 0.2;
 
-    {% if photo.owner == user %}
-    // On map click, set marker and update hidden inputs
-    var marker;
-    function onMapClick(e) {
-        if (marker) {
-            map.removeLayer(marker);
+        // Function to create grid squares or hexagons
+        function createGrid() {
+            // Clear existing grid
+            map.eachLayer(function(layer) {
+                if ((layer instanceof L.Rectangle || layer instanceof L.Polygon) && layer.options.color !== undefined) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            var bounds = map.getBounds();
+            var north = Math.ceil(bounds.getNorth() / gridSize) * gridSize;
+            var south = Math.floor(bounds.getSouth() / gridSize) * gridSize;
+            var east = Math.ceil(bounds.getEast() / gridSize) * gridSize;
+            var west = Math.floor(bounds.getWest() / gridSize) * gridSize;
+
+            {% if cell_bounds %}
+            var highlightedBounds = {{ cell_bounds|safe }};
+            {% endif %}
+
+            // Square grid
+            for (var lat = south; lat < north; lat += gridSize) {
+                for (var lng = west; lng < east; lng += gridSize) {
+                    var rectBounds = [[lat, lng], [lat + gridSize, lng + gridSize]];
+                    var epsilon = 1e-6;
+                    var isHighlighted = {% if cell_bounds %}Math.abs(rectBounds[0][0] - highlightedBounds[0]) < epsilon && Math.abs(rectBounds[0][1] - highlightedBounds[1]) < epsilon{% else %}false{% endif %};
+
+                    L.rectangle(rectBounds, {
+                        color: isHighlighted ? highlightColor : normalColor,
+                        weight: 1,
+                        fillOpacity: isHighlighted ? gridOpacity : 0,
+                        fillColor: isHighlighted ? highlightColor : normalColor
+                    }).addTo(map);
+                }
+            }
         }
-        if (marker_prev) {
-            map.removeLayer(marker_prev);
+
+        // Create initial grid
+        createGrid();
+
+        // Recreate grid when map moves or zooms
+        map.on('moveend', createGrid);
+        map.on('zoomend', createGrid);
+
+    {% else %}
+        // render existing marker
+        var marker_prev;
+        {% if photo.localization_latitude and photo.localization_longitude %}
+            marker_prev = L.marker([{{ photo.localization_latitude | floatformat:8 }}, {{ photo.localization_longitude | floatformat:8 }}]).addTo(map).bindPopup('{{ photo_display_name }}');
+        {% endif %}
+
+        // On map click, set marker and update hidden inputs
+        var marker;
+        function onMapClick(e) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            if (marker_prev) {
+                map.removeLayer(marker_prev);
+            }
+
+            marker = L.marker(e.latlng).addTo(map);
+            document.getElementById("id_lat").value = e.latlng.lat;
+            document.getElementById("id_lng").value = e.latlng.lng;
         }
 
-        marker = L.marker(e.latlng).addTo(map);
-        document.getElementById("id_lat").value = e.latlng.lat;
-        document.getElementById("id_lng").value = e.latlng.lng;
-    }
-
-    map.on('click', onMapClick);
+        map.on('click', onMapClick);
     {% endif %}
 </script>
 
