@@ -5,3 +5,5 @@ psycopg[binary]
 
 requests
 pillow
+
+djlint

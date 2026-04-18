@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from .models import Photo
 
+
 class PhotoModelTests(TestCase):
     def test_if_url_starting_with_https(self):
         """

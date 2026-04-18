@@ -5,7 +5,7 @@ from django.urls import reverse
 import uuid
 
 
-def upload_to_uuid(instance, filename):
+def upload_to_uuid(instance, filename) -> str:
     extension = filename.split('.')[-1]
     return f'photos/{instance.uuid}.{extension}'
 
@@ -14,7 +14,8 @@ class Photo(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     upload_time = models.DateTimeField(auto_now_add=True, null=True)
     is_private = models.BooleanField(default=True)
-    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, null=True)
     image = models.ImageField(upload_to=upload_to_uuid, null=True)
 
     prediction = models.TextField()
@@ -32,7 +33,7 @@ class Photo(models.Model):
     def __str__(self):
         return 'Photo of id: ' + str(self.uuid)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("photo:photo_detail", kwargs={"uuid": self.uuid})
 
 

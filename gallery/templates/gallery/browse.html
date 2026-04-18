@@ -1,54 +1,67 @@
 {% extends 'gallery/base.html' %}
 {% load static %}
 {% load thumbnail %}
-
 {% block content %}
-<div class="browse-container items-top mb-18">
-    <div role="tablist" class="tabs tabs-lift tabs-lg justify-center mb-4 flex flex-wrap">
-        <a role="tab tab-xl" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_my' %}">Moje</a>
-        <a role="tab" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse' %}">Społeczność</a>
-        <a role="tab" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
-        <a role="tab" class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_popular' %}tab tab-active{% else %}tab{% endif %}" href="{% url 'gallery:browse_popular' %}">Najpopularniejsze</a>
-    </div>
-
-    {% if page_obj %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
-            {% for photo in page_obj %}
-                <a class="text-center text-2xl" href="{% url 'photo:photo_detail' photo.uuid %}">
-                    <div class="card bg-base-100 shadow-sm w-full">
-                        <figure>
-                            {% thumbnail photo.image "500x282" crop="center" quality=85 as im %}
-                                <div class="image-wrapper">
-                                    <img src="{{ im.url }}" loading="lazy" alt="Zdjęcie zwierzątka" class="lazy-image" onload="this.classList.add('loaded')"/>
-                                </div>
-                            {% endthumbnail %}
-                            {% if photo.review_status == 1 %}
-                                <img src="/media/question_mark.png" class="absolute -top-2 -right-2 w-16 h-16 object-contain"/>
-                            {% endif %}
-                        </figure>
-                        <div class="justify-between p-4 flex items-center">
-                            <div class="text-lg">{{ photo.display_name }}</div>
-                            <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
+    <div class="browse-container items-top mb-18">
+        <div role="tablist"
+             class="tabs tabs-lift tabs-lg justify-center mb-4 flex flex-wrap">
+            <a role="tab tab-xl"
+               class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_my' %}tab tab-active{% else %}tab{% endif %}"
+               href="{% url 'gallery:browse_my' %}">Moje</a>
+            <a role="tab"
+               class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse' %}tab tab-active{% else %}tab{% endif %}"
+               href="{% url 'gallery:browse' %}">Społeczność</a>
+            <a role="tab"
+               class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_reviews' %}tab tab-active{% else %}tab{% endif %}"
+               href="{% url 'gallery:browse_reviews' %}">Do weryfikacji</a>
+            <a role="tab"
+               class="w-1/2 sm:w-auto {% if request.resolver_match.url_name == 'browse_popular' %}tab tab-active{% else %}tab{% endif %}"
+               href="{% url 'gallery:browse_popular' %}">Najpopularniejsze</a>
+        </div>
+        {% if page_obj %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
+                {% for photo in page_obj %}
+                    <a class="text-center text-2xl"
+                       href="{% url 'photo:photo_detail' photo.uuid %}">
+                        <div class="card bg-base-100 shadow-sm w-full">
+                            <figure>
+                                {% thumbnail photo.image "500x282" crop="center" quality=85 as im %}
+                                    <div class="image-wrapper">
+                                        <img src="{{ im.url }}"
+                                             loading="lazy"
+                                             alt="Zdjęcie zwierzątka"
+                                             class="lazy-image"
+                                             onload="this.classList.add('loaded')" />
+                                    </div>
+                                {% endthumbnail %}
+                                {% if photo.review_status == 1 %}
+                                    <img src="/media/question_mark.png"
+                                         class="absolute -top-2 -right-2 w-16 h-16 object-contain" />
+                                {% endif %}
+                            </figure>
+                            <div class="justify-between p-4 flex items-center">
+                                <div class="text-lg">{{ photo.display_name }}</div>
+                                <div class="text-stone-500 text-sm">{{ photo.upload_time|date:"j.n.Y, G:i" }}</div>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            {% endfor %}
-        </div>
-
-        <div class="flex flex-col items-center">
-            <span class="mb-1">Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
-            
-            <div class="join flex">
-                {% if page_obj.has_previous %}
-                <a class="join-item btn btn-outline w-24" href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
-                {% endif %}
-                {% if page_obj.has_next %}
-                <a class="join-item btn btn-outline w-24" href="?page={{ page_obj.next_page_number }}">Następna</a>
-                {% endif %}
+                    </a>
+                {% endfor %}
             </div>
-        </div>
-    {% else %}
-        <p>Brak zdjęć</p>
-    {% endif %}
-</div>
+            <div class="flex flex-col items-center">
+                <span class="mb-1">Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+                <div class="join flex">
+                    {% if page_obj.has_previous %}
+                        <a class="join-item btn btn-outline w-24"
+                           href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a class="join-item btn btn-outline w-24"
+                           href="?page={{ page_obj.next_page_number }}">Następna</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p>Brak zdjęć</p>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -1,43 +1,44 @@
 {% extends 'account/base.html' %}
-
 {% block content %}
-<div class="flex flex-col items-center mb-16">
-    <div class="avatar avatar-placeholder my-5">
-        <div class="text-neutral-content w-24 rounded-full">
-            <span class="text-3xl"><img src="{{ user.avatar }}" alt="awatar"/></span>
+    <div class="flex flex-col items-center mb-16">
+        <div class="avatar avatar-placeholder my-5">
+            <div class="text-neutral-content w-24 rounded-full">
+                <span class="text-3xl">
+                    <img src="{{ user.avatar }}" alt="awatar" />
+                </span>
+            </div>
         </div>
-    </div>
-    <div class="text-2xl">
-        {{ user.username }}
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="text-center">
-        Masz {{ user.score }} pomocnych komentarzy.<br>
-        {% if not user.protector %}
-            Uzyskaj 50 i zgodę admina, aby zdobyć odznakę Strażnika Przyrody ⚜️.
-        {% else %}
-            Posiadasz odznakę Strażnika Przyrody ⚜️. Możesz zmieniać przypisanie zwierząt.
-        {% endif %}
-    </div>
-    
-    <div class="divider"></div>
-
-    <div class="flex flex-col space-y-6 items-center">
-        <a class="btn-main" href="{% url 'account:select_avatar' %}">Zmień awatar</a>
-        
-        <a class="btn-main" onclick="report_modal.showModal()">Zgłoś poprawkę</a>
-        <dialog id="report_modal" class="modal">
-            <div class="modal-box flex flex-col items-center">
+        <div class="text-2xl">{{ user.username }}</div>
+        <div class="divider"></div>
+        <div class="text-center">
+            Masz {{ user.score }} pomocnych komentarzy.
+            <br>
+            {% if not user.protector %}
+                Uzyskaj 50 i zgodę admina, aby zdobyć odznakę Strażnika Przyrody ⚜️.
+            {% else %}
+                Posiadasz odznakę Strażnika Przyrody ⚜️. Możesz zmieniać przypisanie zwierząt.
+            {% endif %}
+        </div>
+        <div class="divider"></div>
+        <div class="flex flex-col space-y-6 items-center">
+            <a class="btn-main" href="{% url 'account:select_avatar' %}">Zmień awatar</a>
+            <a class="btn-main" onclick="report_modal.showModal()">Zgłoś poprawkę</a>
+            <dialog id="report_modal" class="modal">
+                <div class="modal-box flex flex-col items-center">
                     <form method="dialog">
                         <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
                     <h3 class="text-lg font-bold">Zgłoś poprawkę</h3>
                     <div class="modal-action">
-                        <form class="flex" method="post" action="{% url 'account:send_correction' %}">
+                        <form class="flex"
+                              method="post"
+                              action="{% url 'account:send_correction' %}">
                             {% csrf_token %}
-                            <input class="input mr-4 w-70" type="text" name="message" maxlength="400" required>
+                            <input class="input mr-4 w-70"
+                                   type="text"
+                                   name="message"
+                                   maxlength="400"
+                                   required>
                             <button type="submit" class="btn">Wyślij</button>
                         </form>
                     </div>
@@ -46,8 +47,7 @@
                     <button>close</button>
                 </form>
             </dialog>
-
-        <a class="btn-main" href="{% url 'account:signout' %}">Wyloguj się</a>
+            <a class="btn-main" href="{% url 'account:signout' %}">Wyloguj się</a>
+        </div>
     </div>
-</div>
 {% endblock %}

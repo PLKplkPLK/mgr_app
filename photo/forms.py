@@ -1,9 +1,10 @@
 from django import forms
+from django.core.files.uploadedfile import UploadedFile
 from PIL import Image
 
-from .models import Photo
 
-MAX_FILE_SIZE = 1e7
+MAX_FILE_SIZE = 10 * 1024 * 1024
+
 
 class SendPhotoForm(forms.Form):
     image_file = forms.ImageField(
@@ -16,23 +17,28 @@ class SendPhotoForm(forms.Form):
         widget=forms.CheckboxInput()
     )
 
-    def clean_image_file(self):
+    def clean_image_file(self) -> UploadedFile | None:
         image = self.cleaned_data.get('image_file')
         if image:
             # check size of a file
             if image.size > MAX_FILE_SIZE:
-                raise forms.ValidationError("Plik jest za duży. Maksymalnie 10 MB")
+                raise forms.ValidationError(
+                    "Plik jest za duży. Maksymalnie 10 MB"
+                )
 
             # check type of a file
             try:
                 img = Image.open(image)
                 img.verify()
             except:
-                raise forms.ValidationError("Podany plik nie jest odpowiednim plikiem obrazu")
-            
+                raise forms.ValidationError(
+                    "Podany plik nie jest odpowiednim plikiem obrazu"
+                )
+
             image.seek(0)
 
         return image
+
 
 class PostReviewForm(forms.Form):
     review = forms.CharField(
